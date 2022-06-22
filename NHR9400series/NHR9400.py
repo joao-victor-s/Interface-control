@@ -1,31 +1,37 @@
-import random
 import socket
-from Utility import IPFinder, RefineOutput
+from Utility.RefineOutput import RefineOutput
+from Utility.IPFinder import IPFinder
 
 
 class NHR9400:
     
-    def __init__(self):
+    def __init__(self, name):
+        self.__name = name
         self.__s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.__s.timeout(1)
         self.__out = RefineOutput
 
 
     def setIp(self):
-        pass
+        self.__ip = "1912c25"
     def getIp(self):
-        pass
+        clients = IPFinder.getAllIp()
+        for client in clients:
+            self.__s.connect((client['ip'], 5025))
+            self.__s.send("SYST:RWL\n")
+            self.__s.send("*IDN?\n")
+
 
     #Function that receives messages back and transform it in a string
     def receiveString(self):
         msg = self.__s.recv(1024)
-        msg = self.__out.RefineOutput.byteToString(msg)
+        msg = self.__out.byteToString(msg)
         return msg
     
     #Function that receives messages back and transform it in a float
     def receiveFloat(self):
         msg = self.__s.recv(1024)
-        msg = self.__out.RefineOutput.byteToFloat(msg)
+        msg = self.__out.byteToFloat(msg)
         return msg
 
     def identify(self):
