@@ -7,4 +7,4 @@ class RefineOutput:
 
     def byteToString(recv):
         recv = recv.decode("UTF-8")
-        return recv
+        return str(recv)

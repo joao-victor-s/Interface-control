@@ -5,8 +5,12 @@ from scapy.all import ARP, Ether, srp
 
 class IPFinder:
 
+
+
+    def __init__(self):
+        self.__clients = self.getAllIp()
     #uses socket and scapy to scan the entire local network and returns all the IPs adresses of the devices connects in this networok
-    def getAllIp():
+    def __getAllIp(self):
         s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         s.connect(("10.255.255.255",1))
         local_ip = s.getsockname()[0]
@@ -20,4 +24,10 @@ class IPFinder:
         clients = []
         for sent, received in result:
             clients.append({"ip": received.psrc})
-        return clients
+        self.__clients = clients
+
+    def deteleIp(self, ip):
+        self.__clients.remove(ip)
+
+    def getList(self):
+        return self.__clients

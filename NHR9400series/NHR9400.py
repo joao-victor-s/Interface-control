@@ -1,3 +1,4 @@
+from abc import abstractmethod
 import socket
 from Utility.RefineOutput import RefineOutput
 from Utility.IPFinder import IPFinder
@@ -12,14 +13,9 @@ class NHR9400:
         self.__out = RefineOutput
 
 
-    def setIp(self):
-        self.__ip = "1912c25"
-    def getIp(self):
-        clients = IPFinder.getAllIp()
-        for client in clients:
-            self.__s.connect((client['ip'], 5025))
-            self.__s.send("SYST:RWL\n")
-            self.__s.send("*IDN?\n")
+    @abstractmethod
+    def locateIp(self):
+        pass
 
 
     #Function that receives messages back and transform it in a string
