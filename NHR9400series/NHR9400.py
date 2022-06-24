@@ -9,7 +9,7 @@ class NHR9400:
     def __init__(self, name):
         self.__name = name
         self.__s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        self.__s.timeout(1)
+        self.__s.settimeout(1)
         self.__out = RefineOutput
 
 

@@ -1,6 +1,7 @@
 #Arquivo para teste em geral
 import socket
 from scapy.all import ARP, Ether, srp, arping
+import socket
 import time
 start = time.time()
 
@@ -25,4 +26,10 @@ def getAllIp():
         print(client)
 
 getAllIp()
+s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+s.settimeout(1)
+try: 
+    s.connect(("192.168.15.10", 5025))
+except:
+    print("conexão falhou")
 print (time.time() - start)
