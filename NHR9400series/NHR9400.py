@@ -51,16 +51,6 @@ class NHR9400:
     def setVoltageC(self,voltage):
         self.__s.send("SOUR:VOLT:CPHase " + voltage + "\n")
 
-    #set the current of all phases ** Available only to NHR9430-12
-    def setCurrent(self, current):
-        self.__s.send("SOUR:CURR " + current + "\n")
-    #Functions that sets the limite currents on one phase (A, B or C)
-    def setCurrentA(self, current):
-        self.__s.send("SOUR:CURR:APHase " + current + "\n")
-    def setCurrentB(self, current):
-        self.__s.send("SOUR:CURR:BPHase " + current + "\n")
-    def setCurrentC(self, current):
-        self.__s.send("SOUR:CURR:CPHase " + current + "\n")
     #Command establishes the True Power limit (W) as a positive value for the selected instrument.
     def setPower(self, pow):
         self.__s.send("SOUR:POW " + pow + "\n")

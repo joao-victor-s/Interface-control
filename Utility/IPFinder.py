@@ -15,7 +15,12 @@ class IPFinder:
         s.connect(("10.255.255.255",1))
         local_ip = s.getsockname()[0]
         
-        local_ip = local_ip[:-1] + "/24"
+        splited = local_ip.split('.')
+        splited = local_ip.split('.')
+        splited.pop()
+        splited.append("1/24")
+        local_ip = ".".join(splited)
+
         arp = ARP(pdst=local_ip)
         ether = Ether(dst="ff:ff:ff:ff:ff:ff")
         packet = ether/arp
