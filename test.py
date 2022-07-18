@@ -9,11 +9,8 @@ def getAllIp():
     s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
     s.connect(("10.255.255.255",1))
     local_ip = s.getsockname()[0]
-    splited = local_ip.split('.')
-    splited = local_ip.split('.')
-    splited.pop()
-    splited.append("1/24")
-    local_ip = ".".join(splited)
+    print(local_ip)
+    local_ip = local_ip[:-3] + "1/24"
     print(local_ip)
     print(type(local_ip))
     arp = ARP(pdst=local_ip)
