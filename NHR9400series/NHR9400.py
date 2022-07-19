@@ -11,19 +11,20 @@ class NHR9400:
         self.__s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.__s.settimeout(1)
         self.__out = RefineOutput
+        self.__ip = ""
 
-
+################################# Configurations ######################################################
     @abstractmethod
     def locateIp(self):
         pass
-
-
+    def getIp(self):
+        return self.__ip
     #Function that receives messages back and transform it in a string
     def receiveString(self):
         msg = self.__s.recv(1024)
         msg = self.__out.byteToString(msg)
         return msg
-    
+
     #Function that receives messages back and transform it in a float
     def receiveFloat(self):
         msg = self.__s.recv(1024)
@@ -37,7 +38,15 @@ class NHR9400:
     def checkErrors(self):
         self.__s.send("SYST:ERR?\n")
         return self.receive()
-
+    # Controle do relé de saída do hardware (LIGAR OU DESLIGAR)
+    # 0 OFF - Instrumento desabilitado
+    # 1 ON - Instrumento habilitado
+    def enableOutput(self, value):
+        if value == 0 or value == 1:
+            self.__s.send("SOUR:OUTP:ON "+ value + "\n")
+        else:
+            print("INVALID INPUT")
+################################# Setters and Getters ################################################
     #set limit voltage of all phases
     def setVoltage(self,voltage):
         self.__s.send("SOUR:VOLT " + voltage + "\n")
@@ -79,20 +88,6 @@ class NHR9400:
         value = self.__s.send("FETC:VOLT:CPHase?\n")
         return self.receiveFloat(value)
         
-    #Fetch the average current of all channels
-    def getCurrent(self):
-        value = self.__s.send("FETC:CURR?\n")
-        return self.receiveFloat(value)
-    #fetch individual value of current of one channel
-    def getCurrentA(self):
-        value = self.__s.send("FETC:CURR:APHase?\n")
-        return self.receiveFloat(value)
-    def getCurrentB(self):
-        value = self.__s.send("FETC:CURR:BPHase?\n")
-        return self.receiveFloat(value)
-    def getCurrentC(self):
-        value = self.__s.send("FETC:CURR:CPHase?\n")
-        return self.receiveFloat(value)
     #Fetch the average power of all channels
     def getPower(self):
         value = self.__s.send("FETC:POW?\n")
