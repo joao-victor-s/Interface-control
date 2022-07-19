@@ -8,3 +8,5 @@ print(splited)
 splited.append("1/24")
 read = ".".join(splited)
 print(read)
+
+print("INSTrument:NSELect "+ str(2) + "\n")

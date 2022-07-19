@@ -1,7 +1,6 @@
 from abc import abstractmethod
 import socket
 from Utility.RefineOutput import RefineOutput
-from Utility.IPFinder import IPFinder
 
 
 class NHR9400:
@@ -19,6 +18,60 @@ class NHR9400:
         pass
     def getIp(self):
         return self.__ip
+    #chose a mode with the instrument will run, check the manual to see all modes.
+    def configMode(self, mode):
+        if mode < 0 and mode > 16:
+            print("INVALID INPUT")
+        else:
+            self.__s.send("CONF:HW:MODE " + str(mode) + "\n")
+            self.checkErrors()
+            self.validMode()
+    #check if the mode is valid for the current hardware
+    def validMode(self):
+        self.__s.send("CONF:HW:MODE:VAL")
+        print(self.receiveString())
+
+    #Command configures if [SOURCe:]<Function> commands are immediately or phase-angle controlled Query returns the synchronous operating mode
+    def instrumentSync(self, value):
+        if value == 0 or value == 1:
+            self.__s.send("CONF:INST:SYNC "+ str(value) + "\n")
+        else:
+            print("INVALID INPUT")
+
+    #The 9400 will contain one (1), two (2), or three (3) logical instruments depending on the CONFigure:HW:MODE selected. Unless otherwise noted in a specific command, Any command or queries with an INSTRUMENT scope will be processed by the last instrument selected by either an INSTrument:NSELect or an INSTrument:SELect.
+    def instrumentNselect(self, value):
+        if value < 1 or value > 3:
+            print("INVALID INPUT")
+        else:
+                self.__s.send("INST:NSEL " + str(value) + "\n")
+        self.checkErrors()
+
+    #Command selects an instrument by its alias name created with INSTrument:DEFine[:NAME]. Query returns the current selected logical instrument alias name.
+    #check this command, maybe something wrong
+    def instrumentSelect(self):
+        self.__s.send("INST:SEL")
+        self.checkErrors()
+
+    #Command assigns an alias name allowing selection of the instrument using INSTrument:SELect <name> Query returns the alias name assigned to a specific output channel.
+
+    def instrumentDefName(self, name, num):
+        self.instrumentNselect(num)
+        self.__s.send("INST:DEF:" + str(name) + "\n")
+        self.checkErrors()
+    #Command disassociates an <identifier> alias from the logical instrument number.
+    #After the command executes, the default identifier is re-associated with the instrument number.
+    #The default identifier cannot be deleted.
+    def instDelName(self, name):
+        self.__s.send("INST:DEL:" + str(name) + "\n")
+        self.checkErrors()
+    #Query returns the <identifier> alias for the requested instrument number.
+    #If no instrument number is provided, the <identifier> of the selected instrument is returned.
+    def instrumentName(self, num):
+        if num < 1 or num > 3:
+            print("INVALID INPUT")
+        else:
+                self.__s.send("INST:NAME " + str(num) + "\n")
+        self.checkErrors()
     #Function that receives messages back and transform it in a string
     def receiveString(self):
         msg = self.__s.recv(1024)
@@ -37,42 +90,43 @@ class NHR9400:
     #Function to see if exist any error in the carry
     def checkErrors(self):
         self.__s.send("SYST:ERR?\n")
+        self.__s.timeout(5)
         return self.receive()
     # Controle do relé de saída do hardware (LIGAR OU DESLIGAR)
     # 0 OFF - Instrumento desabilitado
     # 1 ON - Instrumento habilitado
     def enableOutput(self, value):
         if value == 0 or value == 1:
-            self.__s.send("SOUR:OUTP:ON "+ value + "\n")
+            self.__s.send("SOUR:OUTP:ON "+ str(value) + "\n")
         else:
             print("INVALID INPUT")
 ################################# Setters and Getters ################################################
     #set limit voltage of all phases
     def setVoltage(self,voltage):
-        self.__s.send("SOUR:VOLT " + voltage + "\n")
+        self.__s.send("SOUR:VOLT " + str(voltage) + "\n")
     #Functions that sets the limits voltage on one phase (A, B or C)
     def setVoltageA(self,voltage):
-        self.__s.send("SOUR:VOLT:APHase " + voltage + "\n")
+        self.__s.send("SOUR:VOLT:APHase " + str(voltage) + "\n")
 
     def setVoltageB(self,voltage):
-        self.__s.send("SOUR:VOLT:BPHase " + voltage + "\n")
+        self.__s.send("SOUR:VOLT:BPHase " + str(voltage) + "\n")
 
     def setVoltageC(self,voltage):
-        self.__s.send("SOUR:VOLT:CPHase " + voltage + "\n")
+        self.__s.send("SOUR:VOLT:CPHase " + str(voltage) + "\n")
 
     #Command establishes the True Power limit (W) as a positive value for the selected instrument.
     def setPower(self, pow):
-        self.__s.send("SOUR:POW " + pow + "\n")
+        self.__s.send("SOUR:POW " + str(pow) + "\n")
     #Individual command for one phase
     def setPowerA(self, pow):
-        self.__s.send("SOUR:POW:APHase " + pow + "\n")
+        self.__s.send("SOUR:POW:APHase " + str(pow) + "\n")
     def setPowerB(self, pow):
-        self.__s.send("SOUR:POW:BPHase " + pow + "\n")
+        self.__s.send("SOUR:POW:BPHase " + str(pow) + "\n")
     def setPowerC(self, pow):
-        self.__s.send("SOUR:POW:CPHase " + pow + "\n")
+        self.__s.send("SOUR:POW:CPHase " + str(pow) + "\n")
     #Command establishes the operating frequency for the selected instrument.
     def setFreq(self, freq):
-        self.__s.send("SOUR:POW " + freq + "\n")
+        self.__s.send("SOUR:POW " + str(freq) + "\n")
     #Fetch the average voltage of all channels
     def getVoltage(self):
         value = self.__s.send("FETC:VOLT?\n")
