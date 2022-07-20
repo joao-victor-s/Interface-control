@@ -1,5 +1,4 @@
 import socket
-from threading import local
 from scapy.all import ARP, Ether, srp
 
 
@@ -25,6 +24,8 @@ class IPFinder:
         clients = []
         for sent, received in result:
             clients.append({"ip": received.psrc})
+            print(clients)
+        
         self.__clients = clients
 
     def deteleIp(self, ip):

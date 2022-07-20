@@ -10,7 +10,7 @@ def getAllIp():
     s.connect(("10.255.255.255",1))
     local_ip = s.getsockname()[0]
     print(local_ip)
-    local_ip = local_ip[:-3] + "1/24"
+    local_ip = local_ip[:-2] + "1/24"
     print(local_ip)
     print(type(local_ip))
     arp = ARP(pdst=local_ip)
