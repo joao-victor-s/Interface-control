@@ -23,8 +23,7 @@ class IPFinder:
         result = srp(packet, timeout=3,retry = 1, verbose = 0)[0]
         clients = []
         for sent, received in result:
-            clients.append({"ip": received.psrc})
-            print(clients)
+            clients.append(received.psrc)
         
         self.__clients = clients
 

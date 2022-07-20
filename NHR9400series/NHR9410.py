@@ -16,13 +16,12 @@ class NHR9410(NHR9400):
                 if recv.find("NH Research,9410-") != -1: #if find this subtring 
                     self.__ip = client
                     print("Connection successfully")
-                    break
+                    return self.__ip
                 else:
                     print("Connection failed 1")
                     self.__s.close()
             except:
                 print("Connection failed 2")
-                pass
 
 
 
