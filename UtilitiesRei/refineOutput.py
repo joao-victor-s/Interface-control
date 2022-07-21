@@ -1,4 +1,4 @@
-class RefineOutput:
+class refineOutput:
     
     def byteToFloat(recv):
         recv = recv.decode("UTF-8")
@@ -6,5 +6,10 @@ class RefineOutput:
         return float(recv)
 
     def byteToString(recv):
+        print("fail8")
+        recv = bytes(recv)
         recv = recv.decode("UTF-8")
-        return str(recv)
+        recv = recv.rstrip('\n')
+        recv = recv.rstrip('\x00')
+        print("sucess")
+        return recv

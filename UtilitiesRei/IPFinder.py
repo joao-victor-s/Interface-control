@@ -20,7 +20,7 @@ class IPFinder:
         ether = Ether(dst="ff:ff:ff:ff:ff:ff")
         packet = ether/arp
 
-        result = srp(packet, timeout=3,retry = 1, verbose = 0)[0]
+        result = srp(packet, timeout=1,retry = 1, verbose = 0)[0]
         clients = []
         for sent, received in result:
             clients.append(received.psrc)

@@ -1,6 +1,6 @@
 from abc import abstractmethod
 import socket
-from Utility.RefineOutput import RefineOutput
+from UtilitiesRei.refineOutput import refineOutput
 
 
 class NHR9400:
@@ -9,7 +9,7 @@ class NHR9400:
         self.__name = name
         self.__s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.__s.settimeout(1)
-        self.__out = RefineOutput
+        self.__out = refineOutput()
         self.__ip = ""
 
 ################################# Configurations ######################################################
@@ -73,15 +73,20 @@ class NHR9400:
                 self.__s.send("INST:NAME " + str(num) + "\n")
         self.checkErrors()
     #Function that receives messages back and transform it in a string
-    def receiveString(self):
-        msg = self.__s.recv(1024)
-        msg = self.__out.byteToString(msg)
-        return msg
+    def receiveString(self,recv):
+        print("fail6")
+        print("fail8")
+        recv = bytes(recv)
+        recv = recv.decode("UTF-8")
+        recv = recv.rstrip('\n')
+        recv = recv.rstrip('\x00')
+        print("sucess")
+        return recv
 
     #Function that receives messages back and transform it in a float
     def receiveFloat(self):
         msg = self.__s.recv(1024)
-        msg = self.__out.byteToFloat(msg)
+        msg = self.byteToFloat(msg)
         return msg
 
     def identify(self):
@@ -92,6 +97,12 @@ class NHR9400:
         self.__s.send("SYST:ERR?\n")
         self.__s.timeout(5)
         return self.receive()
+
+    def close(self):
+        print(self.__ip)
+        self.__s.connect((self.__ip,5025))
+        self.__s.send("SYST:LOC\n".encode())
+        self.__s.close()
     # Controle do relé de saída do hardware (LIGAR OU DESLIGAR)
     # 0 OFF - Instrumento desabilitado
     # 1 ON - Instrumento habilitado

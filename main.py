@@ -1,8 +1,10 @@
 from Control_Interface.controlInterface import controlInterface
-from Utility.IPFinder import IPFinder
+
 
 interface = controlInterface()
+
 interface.__init__()
+print(interface.getListIp())
 interface.newNhr9410()
 interface.newNhr9430()
 #interface.newNhr9430()
@@ -13,3 +15,9 @@ nhr30 = interface.getNhr9430()
 
 print(nhr10)
 print(nhr30)
+
+for elem in nhr10:
+    print(elem.getIp())
+    elem.close()
+for elem in nhr30:
+    elem.close()
