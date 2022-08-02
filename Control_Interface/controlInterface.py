@@ -20,7 +20,6 @@ class controlInterface:
     #create a NHR9410 object
     def newNhr9410(self):
         new = NHR9410()
-        new.__init__()
         new.locateIp(self.__listIp)
         
         usedIp = new.getIp()
@@ -35,7 +34,6 @@ class controlInterface:
     #create a NHR9430 object
     def newNhr9430(self):
         new = NHR9430()
-        new.__init__()
         usedIp = new.locateIp(self.__listIp)
         #print(usedIp)
         try:

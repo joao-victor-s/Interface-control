@@ -9,15 +9,29 @@ class NHR9400:
         self.__name = name
         self.__s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.__s.settimeout(1)
-        self.__out = refineOutput()
-        self.__ip = ""
 
 ################################# Configurations ######################################################
-    @abstractmethod
-    def locateIp(self):
-        pass
-    def getIp(self):
-        return self.__ip
+    def locateIp(self, clients = []):
+        for client in clients:
+            try:
+                self.__s  = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+                self.__s.settimeout(1)
+                self.__s.connect((client, 5025))
+                self.__s.send("SYST:RWL\n".encode()) #Command to activate remote control and locking the touchscreen
+                self.__s.send("*IDN?\n".encode())
+                msg = self.__s.recv(1024)
+                recv = self.receiveString(msg)
+                if recv.find("NH Research," + self.__name) != -1: #if find this subtring 
+                    print("o cliente encontrado: " + client)
+                    self.__ip = client
+                    print(self.__ip)
+                    print("Connection successfully")
+                    break
+                else:
+                    print("Connection failed 1")
+                    self.__s.close()
+            except:
+                print("Connection failed 2")
     #chose a mode with the instrument will run, check the manual to see all modes.
     def configMode(self, mode):
         if mode < 0 and mode > 16:
@@ -84,9 +98,8 @@ class NHR9400:
         return recv
 
     #Function that receives messages back and transform it in a float
-    def receiveFloat(self):
-        msg = self.__s.recv(1024)
-        msg = self.byteToFloat(msg)
+    def receiveFloat(self, msg):
+        msg = refineOutput().byteToFloat(msg)
         return msg
 
     def identify(self):
