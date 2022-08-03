@@ -3,7 +3,7 @@ import socket
 from UtilitiesRei.refineOutput import refineOutput
 
 
-class NHR9400:
+class NHR9400():
     
     def __init__(self, name):
         self.__name = name
@@ -23,6 +23,7 @@ class NHR9400:
                 msg = self.__s.recv(1024)
                 recv = self.receiveString(msg)
                 id = "NH Research," + str(self.__name)
+                self.__s.send("SOUR:VOLT: 110\n".encode())
                 if recv.find(id) != -1: #if find this subtring 
                     self.__ip = client
                     print(self.__ip)
@@ -35,6 +36,8 @@ class NHR9400:
 
     def getIp(self):
         return self.__ip
+    def getS(self):
+        return self.__s
 
     #chose a mode with the instrument will run, check the manual to see all modes.
     def configMode(self, mode):
@@ -106,11 +109,12 @@ class NHR9400:
     #Function to see if exist any error in the carry
     def checkErrors(self):
         self.__s.send("SYST:ERR?\n".encode())
-        self.__s.timeout(5)
-        return self.receive()
+        value = self.__s.recv(1024)
+        return self.receiveString(value)
 
     def close(self):
         self.__s.send("SYST:LOC\n".encode())
+        print(self.checkErrors())
         self.__s.close()
     # Controle do relé de saída do hardware (LIGAR OU DESLIGAR)
     # 0 OFF - Instrumento desabilitado
@@ -123,7 +127,12 @@ class NHR9400:
 ################################# Setters and Getters ################################################
     #set limit voltage of all phases
     def setVoltage(self,voltage):
-        self.__s.send(("SOUR:VOLT " + str(voltage) + "\n").encode())
+        self.__s.send("INIT\n".encode())
+        msg = "SOUR:VOLT: 110\n"
+        print(msg)
+        print(self.__s)
+        self.__s.send(msg.encode())
+        print("ok")
     #Functions that sets the limits voltage on one phase (A, B or C)
     def setVoltageA(self,voltage):
         self.__s.send(("SOUR:VOLT:APH " + str(voltage) + "\n").encode())
@@ -136,7 +145,7 @@ class NHR9400:
 
     #Command establishes the True Power limit (W) as a positive value for the selected instrument.
     def setPower(self, pow):
-        self.__s.send(("SOUR:POW " + str(pow) + "\n").encode())
+        self.__s.send(("SOUR:POW: " + str(pow) + "\n").encode())
     #Individual command for one phase
     def setPowerA(self, pow):
         self.__s.send(("SOUR:POW:APHase " + str(pow) + "\n").encode())
@@ -201,7 +210,7 @@ class NHR9400:
         self.__s.send("FETC:CURR:BPHase?\n".encode())
         value = self.__s.recv(1024)
         return self.receiveFloat(value)
-        
+
     def getCurrentC(self):
         self.__s.send("FETC:CURR:CPHase?\n".encode())
         value = self.__s.recv(1024)

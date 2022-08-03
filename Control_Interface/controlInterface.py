@@ -26,13 +26,15 @@ class controlInterface:
         else:
             return -1
         new.locateIp(self.__listIp)
+        print(new.getIp())
+        print(new.getS())
         
         usedIp = new.getIp()
         print("usedIP:" + str(usedIp))
         try:
             self.__listIp.remove(usedIp)
             self.__listUsedIp.append(usedIp)
-            if(nhr == "9410"):
+            if nhr == "9410":
                 self.__nhr9410.append(new)
             elif nhr == "9430":
                 self.__nhr9430.append(new)

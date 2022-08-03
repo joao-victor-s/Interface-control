@@ -1,3 +1,4 @@
+import socket
 from NHR9400series.NHR9400 import NHR9400
 
 class NHR9430(NHR9400):
@@ -40,6 +41,7 @@ class NHR9430(NHR9400):
 
     #set the current of all phases ** Available only to NHR9430-12
     def setCurrent(self, current):
+        print(self.__s)
         self.__s.send(("SOUR:CURR " + str(current) + "\n").encode())
     #Functions that sets the limite currents on one phase (A, B or C)
     def setCurrentA(self, current):
@@ -48,6 +50,8 @@ class NHR9430(NHR9400):
         self.__s.send(("SOUR:CURR:BPHase " + str(current) + "\n").encode())
     def setCurrentC(self, current):
         self.__s.send(("SOUR:CURR:CPHase " + str(current) + "\n").encode())
+
+    
 
 
 
