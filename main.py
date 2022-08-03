@@ -20,9 +20,13 @@ print(nhr30)
 for elem in nhr10:
     print("nhr10 ip: ",elem.getIp())
     print("voltage:",elem.getVoltage())
+    print("current:", elem.getCurrent())
+    print("Power:", elem.getPower())
     elem.close()
 
 for elem in nhr30:
     print("nhr30 ip: ",elem.getIp())
     print("voltage:",elem.getVoltage())
+    print("current:", elem.getCurrent())
+    print("Power:", elem.getPower())
     elem.close()

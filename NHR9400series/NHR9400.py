@@ -188,16 +188,22 @@ class NHR9400:
 
         #Fetch the average current of all channels
     def getCurrent(self):
-        value = self.__s.send("FETC:CURR?\n".encode())
+        self.__s.send("FETC:CURR?\n".encode())
+        value = self.__s.recv(1024)
         return self.receiveFloat(value)
     #fetch individual value of current of one channel
     def getCurrentA(self):
-        value = self.__s.send("FETC:CURR:APHase?\n".encode())
+        self.__s.send("FETC:CURR:APHase?\n".encode())
+        value = self.__s.recv(1024)
         return self.receiveFloat(value)
+
     def getCurrentB(self):
-        value = self.__s.send("FETC:CURR:BPHase?\n".encode())
+        self.__s.send("FETC:CURR:BPHase?\n".encode())
+        value = self.__s.recv(1024)
         return self.receiveFloat(value)
+        
     def getCurrentC(self):
-        value = self.__s.send("FETC:CURR:CPHase?\n".encode())
+        self.__s.send("FETC:CURR:CPHase?\n".encode())
+        value = self.__s.recv(1024)
         return self.receiveFloat(value)
     

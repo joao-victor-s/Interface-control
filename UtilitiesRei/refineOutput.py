@@ -1,7 +1,6 @@
 class refineOutput:
     
     def byteToFloat(self, recv):
-        print("recv:",recv)
         recv = bytes(recv)
         recv = recv.decode("UTF-8")
         recv = recv.rstrip('\n\x00')
