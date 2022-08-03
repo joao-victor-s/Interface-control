@@ -9,29 +9,33 @@ class NHR9400:
         self.__name = name
         self.__s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.__s.settimeout(1)
+        self.__ip = ""
 
 ################################# Configurations ######################################################
     def locateIp(self, clients = []):
         for client in clients:
             try:
+
                 self.__s  = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-                self.__s.settimeout(1)
                 self.__s.connect((client, 5025))
                 self.__s.send("SYST:RWL\n".encode()) #Command to activate remote control and locking the touchscreen
                 self.__s.send("*IDN?\n".encode())
                 msg = self.__s.recv(1024)
                 recv = self.receiveString(msg)
-                if recv.find("NH Research," + self.__name) != -1: #if find this subtring 
-                    print("o cliente encontrado: " + client)
+                id = "NH Research," + str(self.__name)
+                if recv.find(id) != -1: #if find this subtring 
                     self.__ip = client
                     print(self.__ip)
                     print("Connection successfully")
                     break
                 else:
-                    print("Connection failed 1")
                     self.__s.close()
             except:
                 print("Connection failed 2")
+
+    def getIp(self):
+        return self.__ip
+
     #chose a mode with the instrument will run, check the manual to see all modes.
     def configMode(self, mode):
         if mode < 0 and mode > 16:
@@ -88,13 +92,7 @@ class NHR9400:
         self.checkErrors()
     #Function that receives messages back and transform it in a string
     def receiveString(self,recv):
-        print("fail6")
-        print("fail8")
-        recv = bytes(recv)
-        recv = recv.decode("UTF-8")
-        recv = recv.rstrip('\n')
-        recv = recv.rstrip('\x00')
-        print("sucess")
+        recv = refineOutput().byteToString(recv)
         return recv
 
     #Function that receives messages back and transform it in a float
@@ -112,8 +110,6 @@ class NHR9400:
         return self.receive()
 
     def close(self):
-        print(self.__ip)
-        self.__s.connect((self.__ip,5025))
         self.__s.send("SYST:LOC\n".encode())
         self.__s.close()
     # Controle do relé de saída do hardware (LIGAR OU DESLIGAR)
@@ -153,30 +149,39 @@ class NHR9400:
         self.__s.send(("SOUR:POW " + str(freq) + "\n").encode())
     #Fetch the average voltage of all channels
     def getVoltage(self):
-        value = self.__s.send("FETC:VOLT?\n".encode())
+        self.__s.send("FETC:VOLT?\n".encode())
+        value = self.__s.recv(1024)
         return self.receiveFloat(value)
     #fetch individual value of voltage of one channel
     def getVoltageA(self):
-        value = self.__s.send("FETC:VOLT:APHase?\n".encode())
+        self.__s.send("FETC:VOLT:APHase?\n".encode())
+        value = self.__s.recv(1024)
         return self.receiveFloat(value)
     def getVoltageB(self):
-        value = self.__s.send("FETC:VOLT:BPHase?\n".encode())
+        self.__s.send("FETC:VOLT:BPHase?\n".encode())
+        value = self.__s.recv(1024)
         return self.receiveFloat(value)
     def getVoltageC(self):
-        value = self.__s.send("FETC:VOLT:CPHase?\n".encode())
+        self.__s.send("FETC:VOLT:CPHase?\n".encode())
+        value = self.__s.recv(1024)
         return self.receiveFloat(value)
         
     #Fetch the average power of all channels
     def getPower(self):
-        value = self.__s.send("FETC:POW?\n".encode())
+        self.__s.send("FETC:POW?\n".encode())
+        value = self.__s.recv(1024)
         return self.receiveFloat(value)
     #fetch individual value of Power of one channel
     def getPowerA(self):
-        value = self.__s.send("FETC:POW:APHase?\n".encode())
+        self.__s.send("FETC:POW:APHase?\n".encode())
+        value = self.__s.recv(1024)
         return self.receiveFloat(value)
     def getPowerB(self):
-        value = self.__s.send("FETC:POW:BPHase?\n".encode())
+        self.__s.send("FETC:POW:BPHase?\n".encode())
+        value = self.__s.recv(1024)
         return self.receiveFloat(value)
+        
     def getPowerC(self):
-        value = self.__s.send("FETC:POW:CPHase?\n".encode())
+        self.__s.send("FETC:POW:CPHase?\n".encode())
+        value = self.__s.recv(1024)
         return self.receiveFloat(value)

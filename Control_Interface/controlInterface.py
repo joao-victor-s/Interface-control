@@ -17,31 +17,29 @@ class controlInterface:
         for ip in self.__listUsedIp:
             self.__listIp.remove(ip)
     
-    #create a NHR9410 object
-    def newNhr9410(self):
-        new = NHR9410()
+    #create a NHR object 
+    def newNhr(self, nhr):
+        if(nhr == "9410"):
+            new = NHR9410()
+        elif nhr == "9430":
+            new = NHR9430()
+        else:
+            return -1
         new.locateIp(self.__listIp)
         
         usedIp = new.getIp()
+        print("usedIP:" + str(usedIp))
         try:
             self.__listIp.remove(usedIp)
             self.__listUsedIp.append(usedIp)
-            self.__nhr9410.append(new)
-            print("herer")
+            if(nhr == "9410"):
+                self.__nhr9410.append(new)
+            elif nhr == "9430":
+                self.__nhr9430.append(new)
+            else:
+                return -1
         except:
             print("Any IP address matched")
-    
-    #create a NHR9430 object
-    def newNhr9430(self):
-        new = NHR9430()
-        usedIp = new.locateIp(self.__listIp)
-        #print(usedIp)
-        try:
-            self.__listIp.remove(usedIp)
-            self.__listUsedIp.append(usedIp)
-            self.__nhr9430.append(new)
-        except:
-            print("Any IP adress matched")
 
     def getNhr9410(self):
         return self.__nhr9410

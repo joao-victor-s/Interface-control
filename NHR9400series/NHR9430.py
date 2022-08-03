@@ -3,8 +3,8 @@ from NHR9400series.NHR9400 import NHR9400
 class NHR9430(NHR9400):
 
     def __init__(self):
-        super().__init__("NHR9430")
-        self.__ip = ""
+        super().__init__("9430")
+        
 
     #Command sets the loading features <loading mode> for a 9430 AC output Query returns the loading features enabled on a 9430
     #Command is only accepted if the instrument is a 9430, with AC outputs mode, and in an OFF state Other models & modes: This command is invalid
@@ -64,8 +64,6 @@ class NHR9430(NHR9400):
         value = self.__s.send("FETC:CURR:CPHase?\n".encode())
         return self.receiveFloat(value)
     
-    def getIp(self):
-        return self.__ip
 
 
     

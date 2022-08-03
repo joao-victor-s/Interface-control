@@ -5,9 +5,10 @@ interface = controlInterface()
 
 interface.__init__()
 print(interface.getListIp())
-interface.newNhr9410()
-interface.newNhr9430()
-#interface.newNhr9430()
+interface.newNhr("9410")
+interface.newNhr("9430")
+interface.newNhr("9430")
+
 nhr10 = []
 nhr30 = []
 nhr10 = interface.getNhr9410()
@@ -17,7 +18,11 @@ print(nhr10)
 print(nhr30)
 
 for elem in nhr10:
-    print(elem.getIp())
+    print("nhr10 ip: ",elem.getIp())
+    print("voltage:",elem.getVoltage())
     elem.close()
+
 for elem in nhr30:
+    print("nhr30 ip: ",elem.getIp())
+    print("voltage:",elem.getVoltage())
     elem.close()
