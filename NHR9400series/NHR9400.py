@@ -135,6 +135,43 @@ class NHR9400():
 ################################# System command #####################################################
     #Command places the touch panel (if present) in local control mode. All front panel keys are returned to a functional state.
     def systLocal(self):
+        self.__s.send("SYST:LOC\n".encode())
+    #Command or receipt of an external SCPI command places the touch panel in a non-locked remote mode.
+    def systRemote(self):
+        self.__s.send("SYST:REM\n".encode())
+    #Query returns the SCPI version number to which the module complies. The value is of the form YYYY.V, where YYYY is the year and V is the revision number for that year.    
+    def systVersion(self):
+        self.__s.send("SYST:VER\n".encode())
+    #Command specifies the interval (Seconds) in which a command must be received. Query returns the programmed watchdog interval (Seconds).
+    def systWatchdogInterval(self, interval):
+        if interval < 0: return -1
+        self.__s.send(("SYST:WATC:INT" + str(interval) +"\n").encode())
+
+    #Command determines the type communication required to reset the watchdog timer. Query returns the type of communication required to reset the watchdog timer.
+    def systWatchdogRobust(self, bool):
+        if bool != 0 or bool != 1: return -1
+        self.__s.send(("SYST:WATC:ROB" + str(bool) +"\n").encode())
+    
+    #Command resets watchdog timer
+    def systWatchdogService(self):
+        self.__s.send(("SYST:WATC:SERV\n").encode())
+
+################################# Digital Subsystem ############################
+
+    #Query returns the current state of the general purpose digital input port on the specified module.
+    def digitalInput(self):
+        self.__s.send(("DIG:INP\n").encode())
+    #Query returns the number of general purpose digital inputs (expressed as number of bits).
+    def digitalInputCount(self):
+        self.__s.send(("DIG:INP:COUN\n").encode())
+    #Command sets the state of the general purpose digital output port on the specified module. Query returns the last programmed state of the general purpose digital output
+    def digitalOutput(self):
+        self.__s.send(("DIG:OUT\n").encode())
+    #Query returns the number of general purpose digital outputs (expressed as number of bits).
+    def digitalInputCount(self):
+        self.__s.send(("DIG:OUT:COUN\n").encode())
+    
+    
 ################################# Setters and Getters ################################################
     #set limit voltage of all phases
     def setVoltage(self,voltage):
