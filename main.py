@@ -15,25 +15,31 @@ nhr30 = []
 nhr10 = interface.getNhr9410()
 nhr30 = interface.getNhr9430()
 
-print(nhr10)
-print(nhr30)
-
 
 for elem in nhr10:
     print("nhr10 ip: ",elem.getIp())
+    
     elem.setVoltage(220)
-    time.sleep(1)
-    elem.setPower(0.7)
-    print(elem.checkErrors())
+    elem.setPower(5)
+    elem.start()
+    
     print("voltage:",elem.getVoltage())
     print("current:", elem.getCurrent())
     print("Power:", elem.getPower())
-    elem.close()
+    print(elem.checkErrors())
 
 for elem in nhr30:
     print("nhr30 ip: ",elem.getIp())
     elem.setCurrent(30)
+    elem.start()
     print("voltage:",elem.getVoltage())
     print("current:", elem.getCurrent())
     print("Power:", elem.getPower())
+
+
+time.sleep(20)
+
+for elem in nhr10:
+    elem.close()
+for elem in nhr30:
     elem.close()

@@ -11,5 +11,4 @@ class mug():
         recv = dec.dec().rewrite(recv)
         return recv
     
-    def getS(self):
-        return self.__s
+    

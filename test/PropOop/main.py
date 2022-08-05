@@ -8,5 +8,5 @@ can.setId(132)
 
 print(can.getId())
 print(can.decode("isso aqui é "))
-print(can.getS()) #this should be working on the project was well
+print("can s: ", can.getS()) #this should be working on the project was well
 print(mug.getS())

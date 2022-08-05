@@ -1,17 +1,19 @@
-import socket
 from NHR9400series.NHR9400 import NHR9400
 
 class NHR9430(NHR9400):
 
     def __init__(self):
         super().__init__("9430")
-        
-
+    
+    
+    def setS(self):
+        self.__s = self.getS()
     #Command sets the loading features <loading mode> for a 9430 AC output Query returns the loading features enabled on a 9430
     #Command is only accepted if the instrument is a 9430, with AC outputs mode, and in an OFF state Other models & modes: This command is invalid
     # 0 = NORMal = CC / CP / CVA with modifiers (PF, CF, & IWAVESHAPE)
     # 1 = CR = Constant Resistance (with optional CC limit)
     # 2 = RL = Constant series Resistance & Inductance
+
     def instrumentLoad(self, value):
         if value < 0 or value > 2:
             print("INVALID INPUT")

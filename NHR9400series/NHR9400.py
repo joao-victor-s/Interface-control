@@ -12,6 +12,12 @@ class NHR9400():
         self.__ip = ""
 
 ################################# Configurations ######################################################
+    #Default start: Enable all instruments and close output relays and starts an aperture measurement on all channels which will run for the time specified by the last received SENSe:SWEep:APERture instrument command
+    #!!!!!! upgrade this function later
+    def start(self):
+        self.__s.send("SOUR:OUTP:ON 1\n".encode())
+        self.__s.send("INIT\n".encode())
+
     def locateIp(self, clients = []):
         for client in clients:
             try:
@@ -23,7 +29,6 @@ class NHR9400():
                 msg = self.__s.recv(1024)
                 recv = self.receiveString(msg)
                 id = "NH Research," + str(self.__name)
-                self.__s.send("SOUR:VOLT: 110\n".encode())
                 if recv.find(id) != -1: #if find this subtring 
                     self.__ip = client
                     print(self.__ip)
@@ -36,6 +41,7 @@ class NHR9400():
 
     def getIp(self):
         return self.__ip
+
     def getS(self):
         return self.__s
 
@@ -113,6 +119,8 @@ class NHR9400():
         return self.receiveString(value)
 
     def close(self):
+        self.__s.send("SOUR:OUTP:ON 0\n".encode())
+        self.__s.send("ABOR\n".encode())
         self.__s.send("SYST:LOC\n".encode())
         print(self.checkErrors())
         self.__s.close()
@@ -124,10 +132,12 @@ class NHR9400():
             self.__s.send(("SOUR:OUTP:ON "+ str(value) + "\n").encode())
         else:
             print("INVALID INPUT")
+################################# System command #####################################################
+    #Command places the touch panel (if present) in local control mode. All front panel keys are returned to a functional state.
+    def systLocal(self):
 ################################# Setters and Getters ################################################
     #set limit voltage of all phases
     def setVoltage(self,voltage):
-        self.__s.send("INIT\n".encode())
         msg = "SOUR:VOLT: 110\n"
         print(msg)
         print(self.__s)
@@ -155,7 +165,12 @@ class NHR9400():
         self.__s.send(("SOUR:POW:CPHase " + str(pow) + "\n").encode())
     #Command establishes the operating frequency for the selected instrument.
     def setFreq(self, freq):
-        self.__s.send(("SOUR:POW " + str(freq) + "\n").encode())
+        self.__s.send(("SOUR:FREQ " + str(freq) + "\n").encode())
+    #!!!! Doesnt work!!!!
+    def getFreq(self):
+        self.__s.send("FETC:FREQ\n".encode())
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
     #Fetch the average voltage of all channels
     def getVoltage(self):
         self.__s.send("FETC:VOLT?\n".encode())

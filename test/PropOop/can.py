@@ -11,3 +11,5 @@ class can(mug.mug):
     
     def getId(self):
         return self.__id
+    def getS(self):
+        return self.__s

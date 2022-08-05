@@ -5,31 +5,29 @@ import socket
 import time
 start = time.time()
 
-def getAllIp():
-    s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-    s.connect(("10.255.255.255",1))
-    local_ip = s.getsockname()[0]
-    print(local_ip)
-    local_ip = local_ip[:-3] + "1/24"
-    print(local_ip)
-    print(type(local_ip))
-    arp = ARP(pdst=local_ip)
-    ether = Ether(dst="ff:ff:ff:ff:ff:ff")
-    packet = ether/arp
-
-    result= srp(packet, timeout=3,retry = 1, verbose = 0)[0]
-    clients = []
-    for sent, received in result:
-        clients.append(received.psrc)
-    
-    for client in clients:
-        print(client)
-
-getAllIp()
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 s.settimeout(1)
-try: 
-    s.connect(("192.168.15.10", 5025))
-except:
-    print("conexão falhou")
-print (time.time() - start)
+
+s.connect(("192.168.0.2",5025))
+
+s.send("SYST:RWL\n".encode()) #Command to activate remote control and locking the touchscreen
+s.send("*IDN?\r\n".encode())
+msg = s.recv(1024)
+print(msg)
+
+
+s.send("SOUR:OUTP:ON 1\n".encode())
+s.send("INIT\n".encode())
+s.send("SOUR:VOLT: 110\r\n".encode())
+
+
+
+s.send("SYST:ERR?\n".encode())
+msg = s.recv(1024)
+print(msg)
+
+time.sleep(5)
+s.send("SOUR:OUTP:ON 0\n".encode())
+s.send("SYST:LOC\n".encode())
+
+s.close()
