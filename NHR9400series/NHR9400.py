@@ -182,26 +182,42 @@ class NHR9400():
         print("ok")
     #Functions that sets the limits voltage on one phase (A, B or C)
     def setVoltageA(self,voltage):
+        if voltage < 0:
+            return -1
         self.__s.send(("SOUR:VOLT:APH " + str(voltage) + "\n").encode())
 
     def setVoltageB(self,voltage):
+        if voltage < 0:
+            return -1
         self.__s.send(("SOUR:VOLT:BPHase " + str(voltage) + "\n").encode())
 
     def setVoltageC(self,voltage):
+        if voltage < 0:
+            return -1
         self.__s.send(("SOUR:VOLT:CPHase " + str(voltage) + "\n").encode())
 
     #Command establishes the True Power limit (W) as a positive value for the selected instrument.
     def setPower(self, pow):
+        if pow < 0:
+            return -1
         self.__s.send(("SOUR:POW: " + str(pow) + "\n").encode())
     #Individual command for one phase
     def setPowerA(self, pow):
+        if pow < 0:
+            return -1
         self.__s.send(("SOUR:POW:APHase " + str(pow) + "\n").encode())
     def setPowerB(self, pow):
+        if pow < 0:
+            return -1
         self.__s.send(("SOUR:POW:BPHase " + str(pow) + "\n").encode())
     def setPowerC(self, pow):
+        if pow < 0:
+            return -1
         self.__s.send(("SOUR:POW:CPHase " + str(pow) + "\n").encode())
     #Command establishes the operating frequency for the selected instrument.
     def setFreq(self, freq):
+        if freq < 0:
+            return -1
         self.__s.send(("SOUR:FREQ " + str(freq) + "\n").encode())
     #!!!! Doesnt work!!!!
     def getFreq(self):

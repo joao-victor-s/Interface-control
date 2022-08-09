@@ -43,14 +43,21 @@ class NHR9430(NHR9400):
 
     #set the current of all phases ** Available only to NHR9430-12
     def setCurrent(self, current):
-        print(self.__s)
+        if current < 0:
+            return -1
         self.__s.send(("SOUR:CURR " + str(current) + "\n").encode())
     #Functions that sets the limite currents on one phase (A, B or C)
     def setCurrentA(self, current):
+        if current < 0:
+            return -1
         self.__s.send(("SOUR:CURR:APHase " + str(current) + "\n").encode())
     def setCurrentB(self, current):
+        if current < 0:
+            return -1
         self.__s.send(("SOUR:CURR:BPHase " + str(current) + "\n").encode())
     def setCurrentC(self, current):
+        if current < 0:
+            return -1
         self.__s.send(("SOUR:CURR:CPHase " + str(current) + "\n").encode())
 
     
