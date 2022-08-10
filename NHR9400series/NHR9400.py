@@ -170,9 +170,58 @@ class NHR9400():
     #Query returns the number of general purpose digital outputs (expressed as number of bits).
     def digitalInputCount(self):
         self.__s.send(("DIG:OUT:COUN\n").encode())
+################################# Instrument Capabilities - System Information Queries ##############################
+
+# Query returns the number of output channels detected by the hardware.
+    def instrumentSystemChanels(self):
+        self.__s.send(("INST:CAP:SYST:CHAN\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
     
-    
+# Query returns the number of chassis detected (Master + Auxiliaries)
+    def instrumentSystemChassis(self):
+        self.__s.send(("INST:CAP:SYST:CHAS\n").encode()) 
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
+
+#Query returns the maximum number of commands which can be stored in a macro
+    def instrumentSystemMacros(self):
+        self.__s.send(("INST:CAP:MACR:COMM:MAX\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
+
+#Query returns the maximum delay time allowed for MACRo:WAIT[:TIME] within a single macro step.
+    def instrumentSystemMacroDelay(self):
+        self.__s.send(("INST:CAP:MACR:DEL:MAX\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
+
+#Query returns the default Regulation Gain setting set value used by the hardware.
+    def instrumentSystemRGainNominal(self):
+        self.__s.send(("INST:CAP:RGA:NOM\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
+
+#Query returns the maximum Regulation Gain setting set value used by the hardware.
+    def instrumentSystemRGainMax(self):
+        self.__s.send(("INST:CAP:RGA:MAX\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
+
+#Query returns the maximum trip time (seconds) for a safety limit settings
+    def instrumentSystemTripMax(self):
+        self.__s.send(("INST:CAP:TRIP:MAX\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
+
+################################# Instrument Capabilities - Measurement Capabilities Queries ############################## 
+#Query returns the absolute maximum (or minimum) measurement aperture setting for the module.
+    def instrumentSystemTripMax(self):
+        self.__s.send(("INST:CAP:TRIP:MAX\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
 ################################# Setters and Getters ################################################
+
     #set limit voltage of all phases
     def setVoltage(self,voltage):
         if voltage < 0:
