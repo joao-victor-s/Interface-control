@@ -215,14 +215,125 @@ class NHR9400():
         return self.receiveFloat(value)
 
 ################################# Instrument Capabilities - Measurement Capabilities Queries ############################## 
-#Query returns the absolute maximum (or minimum) measurement aperture setting for the module.
-    def instrumentSystemTripMax(self):
-        self.__s.send(("INST:CAP:TRIP:MAX\n").encode())
+#Query returns a list with the absolute maximum and minimum measurement aperture setting for the module.
+    def instrumentSystemApertureRange(self):
+        range = []
+        self.__s.send(("INST:CAP:APER:MIN\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        self.__s.send(("INST:CAP:APER:MAX\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        
+        return range
+
+#Query returns the absolute peak current measurement capability for instrument selected.
+    def instrumentSystemCurrent(self):
+        range = []
+        self.__s.send(("INST:CAP:CURR:MEAS:MIN\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        self.__s.send(("INST:CAP:CURR:MEAS:MAX\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        
+        return range
+#Query returns maximum (minimum) peak current measurement for the selected instrument & range
+    def instrumentSystemCurrentRange(self):
+        range = []
+        self.__s.send(("INST:CAP:CURR:MEAS:RANG:MIN\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        self.__s.send(("INST:CAP:CURR:MEAS:RANG:MAX\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        
+        return range
+#Query returns the waveform digitizer’s maximum (minimum) sample frequency in Hz.
+    def instrumentSystemFreq(self):
+        range = []
+        self.__s.send(("INST:CAP:SAMPl:FREQ:MIN\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        self.__s.send(("INST:CAP:SAMPl:FREQ:MAX\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        
+        return range
+
+#Query returns the waveform digitizer’s maximum sample memory depth
+    def instrumentSamplePoints(self):
+        self.__s.send(("INST:CAP:SAMPl:POIN:MAX\n").encode())
         value = self.__s.recv(1024)
         return self.receiveFloat(value)
+
+#Query returns the absolute peak voltage measurement capability for instrument selected.
+#For AC (1φ) & DC outputs: Query response is expressed as line-neutral.
+#For AC multi-φ outputs: Query response is expressed as line-line equivalent value.
+    def instrumentSystemVoltage(self):
+        range = []
+        self.__s.send(("INST:CAP:VOLT:MEAS:MIN\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        self.__s.send(("INST:CAP:VOLT:MEAS:MAX\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        
+        return range
+    
+    def instrumentSystemVoltage(self, phase):
+        if phase == 1:
+            msg = "INST:CAP:VOLT:APH:"
+        elif phase == 2:
+            msg = "INST:CAP:VOLT:BPH:"
+        elif phase == 1:
+            msg = "INST:CAP:VOLT:CPH:"
+        else:
+            return -1
+        range = []
+        self.__s.send((msg + "MEAS:MIN\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        self.__s.send((msg + "MEAS:MAX\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        
+        return range
+#Query returns maximum (minimum) peak voltage measurement for the selected instrument & range
+    def instrumentSystemVoltageRange(self):
+        range = []
+        self.__s.send(("INST:CAP:VOLT:MEAS:RANG:MIN\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        self.__s.send(("INST:CAP:VOLT:MEAS:RANG:MAX\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        
+        return range
+
+    def instrumentSystemVoltageRange(self, phase):
+        if phase == 1:
+            msg = "INST:CAP:VOLT:APH:"
+        elif phase == 2:
+            msg = "INST:CAP:VOLT:BPH:"
+        elif phase == 1:
+            msg = "INST:CAP:VOLT:CPH:"
+        else:
+            return -1
+        range = []
+        self.__s.send((msg + "MEAS:RANG:MIN\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        self.__s.send((msg + "MEAS:RANG:MAX\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        
+        return range
+
+
 ################################# Setters and Getters ################################################
 
-    #set limit voltage of all phases
+#set limit voltage of all phases
     def setVoltage(self,voltage):
         if voltage < 0:
             return -1
