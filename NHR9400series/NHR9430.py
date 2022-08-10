@@ -60,6 +60,24 @@ class NHR9430(NHR9400):
             return -1
         self.__s.send(("SOUR:CURR:CPHase " + str(current) + "\n").encode())
 
+###################### Instrument Capabilities #################
+
+#Query returns the minimum and maximum allowable set value for crest factor in NORMal loading mode Refer to CONFigure:LOAD:MODE for information about setting the 9430 in NORmal loading mode.
+    def instrumentCapCurrentCF(self):
+        self.__s.send(("INST:CAP:CURR:CF:MAX MIN\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveString(value)
+#Query returns the minimum and maximum resistance that can be set in RL loading mode. Refer to CONFigure:LOAD:MODE for information about setting the 9430 in RL loading mode.
+    def instrumentCapResistenceRL(self):
+        self.__s.send(("INST:CAP:RL:RES:MAX MIN\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveString(value)
+#Query returns the minimum and maximum inductance that can be set in RL loading mode.
+    def instrumentCapInductanceRL(self):
+        self.__s.send(("INST:CAP:RL:IND:MAX MIN\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveString(value)
+
     
 
 

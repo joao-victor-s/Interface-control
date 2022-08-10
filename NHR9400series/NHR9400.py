@@ -252,10 +252,10 @@ class NHR9400():
 #Query returns the waveform digitizer’s maximum (minimum) sample frequency in Hz.
     def instrumentSystemFreq(self):
         range = []
-        self.__s.send(("INST:CAP:SAMPl:FREQ:MIN\n").encode())
+        self.__s.send(("INST:CAP:SAMP:FREQ:MIN\n").encode())
         value = self.__s.recv(1024)
         range.append(self.receiveFloat(value))
-        self.__s.send(("INST:CAP:SAMPl:FREQ:MAX\n").encode())
+        self.__s.send(("INST:CAP:SAMP:FREQ:MAX\n").encode())
         value = self.__s.recv(1024)
         range.append(self.receiveFloat(value))
         
@@ -286,7 +286,7 @@ class NHR9400():
             msg = "INST:CAP:VOLT:APH:"
         elif phase == 2:
             msg = "INST:CAP:VOLT:BPH:"
-        elif phase == 1:
+        elif phase == 3:
             msg = "INST:CAP:VOLT:CPH:"
         else:
             return -1
@@ -316,7 +316,7 @@ class NHR9400():
             msg = "INST:CAP:VOLT:APH:"
         elif phase == 2:
             msg = "INST:CAP:VOLT:BPH:"
-        elif phase == 1:
+        elif phase == 3:
             msg = "INST:CAP:VOLT:CPH:"
         else:
             return -1
@@ -330,7 +330,76 @@ class NHR9400():
         
         return range
 
+################################# Instrument Capabilities - Setting Capabilities Queries ##############################
 
+# Query returns the absolute maximum current (ARMS or ADC) output capability for instrument selected.
+    def instrumentCapCurrent(self):
+        self.__s.send(("INST:CAP:CURR:MAX\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
+#Query returns the maximum current (ARMS or ADC) set-point value for selected instrument & range
+    def instrumentCapCurrentRange(self):
+        self.__s.send(("INST:CAP:CURR:RANG:MAX\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
+
+#Query returns a list of maximum or minimum current (ARMS or ADC) ranges for the selected instrument.
+    def instrumentCapCurrentRangeList(self):
+        range = []
+        self.__s.send(("INST:CAP:CURR:RANG:LIST:MIN\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveString(value))
+        self.__s.send(("INST:CAP:CURR:RANG:LIST:MAX\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveString(value))
+        
+        return range
+
+#Query returns the maximum (minimum) allowable operating frequency.
+    def instrumentCapFreqRange(self):
+        range = []
+        self.__s.send(("INST:CAP:FREQ:RANG:MIN\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        self.__s.send(("INST:CAP:FREQ:RANG:MAX\n").encode())
+        value = self.__s.recv(1024)
+        range.append(self.receiveFloat(value))
+        
+        return range
+
+#Query returns the absolute maximum true power (Watts) setting value for the instrument selected.
+    def instrumentCapPowerMax(self):
+        self.__s.send(("INST:CAP:POW:ALL:MAX\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
+#  for each phase
+    def instrumentCapPowerMax(self, phase):
+        if phase == 1:
+            msg = "INST:CAP:POW:APH:"
+        elif phase == 2:
+            msg = "INST:CAP:POW:BPH:"
+        elif phase == 3:
+            msg = "INST:CAP:POW:CPH:"
+        else:
+            return -1
+        self.__s.send((msg + "MAX\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveFloat(value)
+#These queries will retrieve the minimum (smallest positive) and maximum (largest positive) positive resistance setting for the Module. For example, the minimum = 1.5 and maximum = 1000.
+    def instrmentCapResistencePos(self):
+        self.__s.send(("INST:CAP:RES:POS:MAX MIN\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveString(value)
+    
+    def instrmentCapResistencenNeg(self):
+        self.__s.send(("INST:CAP:RES:NEG:MAX MIN\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveString(value)
+#Query returns the absolute maximum voltage (VRMS or VDC) output capability for instrument selected.
+    def instrumentCapVoltageMaxMin(self):
+        self.__s.send(("INST:CAP:VOLT:ALL:MAX MIN\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveString(value)
 ################################# Setters and Getters ################################################
 
 #set limit voltage of all phases
