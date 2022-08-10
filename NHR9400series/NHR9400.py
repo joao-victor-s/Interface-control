@@ -175,11 +175,9 @@ class NHR9400():
 ################################# Setters and Getters ################################################
     #set limit voltage of all phases
     def setVoltage(self,voltage):
-        msg = "SOUR:VOLT: 110\n"
-        print(msg)
-        print(self.__s)
-        self.__s.send(msg.encode())
-        print("ok")
+        if voltage < 0:
+            return -1
+        self.__s.send(("SOUR:VOLT: " + str(voltage) + "\n").encode())
     #Functions that sets the limits voltage on one phase (A, B or C)
     def setVoltageA(self,voltage):
         if voltage < 0:
