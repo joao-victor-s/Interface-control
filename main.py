@@ -10,7 +10,7 @@ def main():
     interface.__init__()
     print(interface.getListIp())
     interface.newNhr("9410")
-    interface.newNhr("9430")
+    #interface.newNhr("9430")
     #interface.newNhr("9430")
 
     nhr10 = []
@@ -20,27 +20,21 @@ def main():
 
 
     for elem in nhr10:
-        print("nhr10 ip: ",elem.getIp())
+            print("nhr10 ip: ",elem.getIp())
+            print("nhr10 max current: ", elem.instrumentCapCurrent())
+            print("nhr10 max current range: ", elem.instrumentCapCurrentRange())
+            print("nhr10 max freq range: ", elem.instrumentCapFreqRange())
+            print("nhr10 max power range: ", elem.instrumentCapPowerMax())
+            print("nhr10 max voltage range: ", elem.instrumentCapVoltageMaxMin())
+
         
-        elem.setVoltage(220)
-        elem.setPower(5)
-        elem.start()
-        
-        print("voltage:",elem.getVoltage())
-        print("current:", elem.getCurrent())
-        print("Power:", elem.getPower())
-        print(elem.checkErrors())
+
 
     for elem in nhr30:
         print("nhr30 ip: ",elem.getIp())
-        elem.setCurrent(30)
-        elem.start()
-        print("voltage:",elem.getVoltage())
-        print("current:", elem.getCurrent())
-        print("Power:", elem.getPower())
 
 
-    time.sleep(20)
+    time.sleep(3)
 
     for elem in nhr10:
         elem.close()
