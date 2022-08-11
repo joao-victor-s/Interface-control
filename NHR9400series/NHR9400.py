@@ -119,6 +119,8 @@ class NHR9400():
         return self.receiveString(value)
 
     def close(self):
+        
+        self.systWatchdogService()
         self.__s.send("SOUR:OUTP:ON 0\n".encode())
         self.__s.send("ABOR\n".encode())
         self.__s.send("SYST:LOC\n".encode())
@@ -145,16 +147,22 @@ class NHR9400():
     #Command specifies the interval (Seconds) in which a command must be received. Query returns the programmed watchdog interval (Seconds).
     def systWatchdogInterval(self, interval):
         if interval < 0: return -1
-        self.__s.send(("SYST:WATC:INT" + str(interval) +"\n").encode())
+        self.__s.send(("SYST:WATC:SERV\n").encode())
+        self.__s.send(("SYST:WATC:INT " + str(interval) +"\n").encode())
+        self.__s.send(("SYST:WATC:SERV\n").encode())
+        print(self.checkErrors())
 
     #Command determines the type communication required to reset the watchdog timer. Query returns the type of communication required to reset the watchdog timer.
     def systWatchdogRobust(self, bool):
         if bool != 0 or bool != 1: return -1
-        self.__s.send(("SYST:WATC:ROB" + str(bool) +"\n").encode())
+        self.__s.send(("SYST:WATC:ROB " + str(bool) +"\n").encode())
+        value = self.__s.recv(1024)
+        return self.receiveString(value)
     
     #Command resets watchdog timer
     def systWatchdogService(self):
         self.__s.send(("SYST:WATC:SERV\n").encode())
+        
 
 ################################# Digital Subsystem ############################
 
