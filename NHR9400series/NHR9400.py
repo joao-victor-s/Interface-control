@@ -1,5 +1,6 @@
 from abc import abstractmethod
 import socket
+import time
 from UtilitiesRei.refineOutput import refineOutput
 
 
@@ -24,6 +25,7 @@ class NHR9400():
 
                 self.__s  = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
                 self.__s.connect((client, 5025))
+                self.__s.send("*RST".encode())
                 self.__s.send("SYST:RWL\n".encode()) #Command to activate remote control and locking the touchscreen
                 self.__s.send("*IDN?\n".encode())
                 msg = self.__s.recv(1024)
@@ -120,11 +122,10 @@ class NHR9400():
 
     def close(self):
         
-        self.systWatchdogService()
+        
         self.__s.send("SOUR:OUTP:ON 0\n".encode())
         self.__s.send("ABOR\n".encode())
         self.__s.send("SYST:LOC\n".encode())
-        print(self.checkErrors())
         self.__s.close()
     # Controle do relé de saída do hardware (LIGAR OU DESLIGAR)
     # 0 OFF - Instrumento desabilitado
@@ -155,12 +156,14 @@ class NHR9400():
     def systWatchdogRobust(self, bool):
         if bool != 0 or bool != 1: return -1
         self.__s.send(("SYST:WATC:ROB " + str(bool) +"\n").encode())
-        value = self.__s.recv(1024)
-        return self.receiveString(value)
+        self.__s.send(("*RST\n").encode())
+        self.__s.send("SYST:RWL\n".encode())
     
     #Command resets watchdog timer
     def systWatchdogService(self):
         self.__s.send(("SYST:WATC:SERV\n").encode())
+        self.__s.send(("*RST\n").encode())
+        self.__s.send("SYST:RWL\n".encode())
         
 
 ################################# Digital Subsystem ############################

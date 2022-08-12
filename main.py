@@ -20,7 +20,7 @@ def main():
 
 
     for elem in nhr10:
-        print("nhr10 watch dog interval: ", elem.systWatchdogInterval(5))
+        print("nhr10 watch dog interval: ", elem.systWatchdogInterval(0))
         print("nhr10 ip: ",elem.getIp())
         print("nhr10 max current: ", elem.instrumentCapCurrent())
         print("nhr10 current range: ", elem.instrumentCapCurrentRange())
