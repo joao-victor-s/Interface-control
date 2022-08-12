@@ -147,10 +147,9 @@ class NHR9400():
     #Command specifies the interval (Seconds) in which a command must be received. Query returns the programmed watchdog interval (Seconds).
     def systWatchdogInterval(self, interval):
         if interval < 0: return -1
-        self.__s.send(("SYST:WATC:SERV\n").encode())
         self.__s.send(("SYST:WATC:INT " + str(interval) +"\n").encode())
-        self.__s.send(("SYST:WATC:SERV\n").encode())
-        print(self.checkErrors())
+        self.__s.send(("*RST\n").encode())
+        self.__s.send("SYST:RWL\n".encode())
 
     #Command determines the type communication required to reset the watchdog timer. Query returns the type of communication required to reset the watchdog timer.
     def systWatchdogRobust(self, bool):

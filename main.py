@@ -20,19 +20,18 @@ def main():
 
 
     for elem in nhr10:
-            print("nhr10 ip: ",elem.getIp())
-            print("nhr10 max current: ", elem.instrumentCapCurrent())
-            print("nhr10 current range: ", elem.instrumentCapCurrentRange())
-            print("nhr10 freq range: ", elem.instrumentCapFreqRange())
-            print("nhr10 power range: ", elem.instrumentCapPowerMax())
-            print("nhr10 voltage range: ", elem.instrumentCapVoltageMaxMin())
-            print("nhr10 watch dog interval: ", elem.systWatchdogInterval(5))
-
+        print("nhr10 watch dog interval: ", elem.systWatchdogInterval(5))
+        print("nhr10 ip: ",elem.getIp())
+        print("nhr10 max current: ", elem.instrumentCapCurrent())
+        print("nhr10 current range: ", elem.instrumentCapCurrentRange())
+        print("nhr10 freq range: ", elem.instrumentCapFreqRange())
+        print("nhr10 power range: ", elem.instrumentCapPowerMax())
+        print("nhr10 voltage range: ", elem.instrumentCapVoltageMaxMin())
         
-
 
     for elem in nhr30:
         print("nhr30 ip: ",elem.getIp())
+        print("nhr10 watch dog interval: ", elem.systWatchdogInterval(5))
         print("nhr30 max current: ", elem.instrumentCapCurrent())
         print("nhr30 current range: ", elem.instrumentCapCurrentRange())
         print("nhr30 freq range: ", elem.instrumentCapFreqRange())
