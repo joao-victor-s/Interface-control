@@ -25,14 +25,6 @@ def main():
         print("nhr10 ip: ",elem.getIp())
         print("nhr 10 array: ", elem.getVoltageArray())
   
-        
-
-    for elem in nhr30:
-        elem.setCurrent(10)
-        elem.start()
-        print("nhr30 ip: ",elem.getIp())
-        print("nhr 30 array: ", elem.getCurrentArray())
-        
 
 
     time.sleep(3)
