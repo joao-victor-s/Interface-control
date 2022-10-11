@@ -1,75 +1,35 @@
 
+var dps = Array(130)
 
-const ctx = document.getElementById('myChart').getContext('2d');
-
-var graph_data = {
-    type: 'line',
-
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            tension: 0,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-
-            ],
-
-            borderWidth: 5
-        }]
-    },
-  
-
-}
-const data = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-  datasets: [{
-    label: 'Looping tension',
-    data: [65, 59, 80, 81, 26, 55, 40],
-    tension: 0.5,
-    fill: false,
-    borderColor: 'rgb(75, 192, 192)',
+var myChart = new CanvasJS.Chart("chartContainer",{
+  title: {
+    text: "Live Data"
+  },
+  axisY: {
+    gridThickness: 0
+  },
+  data: [{
+    type: "spline",
+    dataPoints: dps
   }]
-};
-
-const config = {
-    type: 'line',
-    data: graph_data,
-    bezierCurve: true,
-    options: {
-      animations: {
-        tension: {
-          duration: 1000,
-          easing: 'easeInSine',
-          loop: true
-        }
-      },
-      scales: {
-        y: { // defining min and max so hiding the dataset does not change scale range
-          min: 0,
-          max: 100
-        }
-      }
-    }
-  };
+});
+myChart.render();
 
 
-const myChart = new Chart(ctx, graph_data, config);
-
-
-
-var socket = new WebSocket('ws://localhost:8000/ws/graph/')
+var socket = new WebSocket('ws://localhost:7000/ws/graph/');
+var updateInterval = 500;
 
 socket.onmessage = function(e){
     var djangoData = JSON.parse(e.data);
-    console.log(djangoData);
-    
-     var newGraphData = graph_data.data.datasets[0].data;
-     newGraphData.shift();
-     newGraphData.push(djangoData.value);
+    console.log(djangoData.value);
+    var updatedDps = [];
+    myChart.options.data[0].dataPoints = [];
 
-     graph_data.data.datasets[0].data = newGraphData;
-     myChart.update();
+    for(var i = 0; i < dps.length; i++)
+      updatedDps.push(djangoData.value[i]);
+      console.log(djangoData.value[i]);
 
-}
+    myChart.options.data[0].dataPoints = updatedDps;
+    myChart.render();
+};
+setInterval(function(e){socket.onmessage()}, updateInterval);
