@@ -111,6 +111,11 @@ class NHR9400():
         msg = refineOutput().byteToFloat(msg)
         return msg
 
+    #Function that receives messages back and transform it in a array
+    def receiveArray(self, msg):
+        msg = refineOutput().byteToArray(msg)
+        return msg
+
     def identify(self):
         self.__s.send("*IDN?\n".encode())
         return self.receive()
@@ -396,7 +401,7 @@ class NHR9400():
         value = self.__s.recv(1024)
         return self.receiveFloat(value)
 #These queries will retrieve the minimum (smallest positive) and maximum (largest positive) positive resistance setting for the Module. For example, the minimum = 1.5 and maximum = 1000.
-    def instrmentCapResistencePos(self):
+    def instrumentCapResistencePos(self):
         self.__s.send(("INST:CAP:RES:POS:MIN?\r\n").encode())
         value = self.__s.recv(1024)
         range.append(self.receiveFloat(value))
@@ -406,7 +411,7 @@ class NHR9400():
         
         return range
     
-    def instrmentCapResistencenNeg(self):
+    def instrumentCapResistencenNeg(self):
         self.__s.send(("INST:CAP:RES:NEG:MIN?\r\n").encode())
         value = self.__s.recv(1024)
         range.append(self.receiveFloat(value))
@@ -495,6 +500,12 @@ class NHR9400():
         self.__s.send("FETC:VOLT:CPHase?\n".encode())
         value = self.__s.recv(1024)
         return self.receiveFloat(value)
+    
+    def getVoltageArray(self):
+        self.__s.send("FETC:ARR:VOLT?\n".encode())
+        value = self.__s.recv(1024)
+        return self.receiveArray(value)
+
         
     #Fetch the average power of all channels
     def getPower(self):
