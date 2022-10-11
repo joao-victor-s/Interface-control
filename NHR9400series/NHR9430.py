@@ -60,6 +60,11 @@ class NHR9430(NHR9400):
             return -1
         self.__s.send(("SOUR:CURR:CPHase " + str(current) + "\n").encode())
 
+    def getCurrentArray(self):
+        self.__s.send("FETC:ARR:CURR?\n".encode())
+        value = self.__s.recv(1024)
+        return self.receiveArray(value)
+
 ###################### Instrument Capabilities #################
 
 #Query returns the minimum and maximum allowable set value for crest factor in NORMal loading mode Refer to CONFigure:LOAD:MODE for information about setting the 9430 in NORmal loading mode.

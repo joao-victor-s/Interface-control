@@ -126,12 +126,11 @@ class NHR9400():
         return self.receiveString(value)
 
     def close(self):
-        
-        
         self.__s.send("SOUR:OUTP:ON 0\n".encode())
         self.__s.send("ABOR\n".encode())
         self.__s.send("SYST:LOC\n".encode())
         self.__s.close()
+
     # Controle do relé de saída do hardware (LIGAR OU DESLIGAR)
     # 0 OFF - Instrumento desabilitado
     # 1 ON - Instrumento habilitado
