@@ -500,17 +500,21 @@ class NHR9400():
         value = self.__s.recv(1024)
         return self.receiveFloat(value)
     
-    def getVoltageArray(self):
-        array = []
+    def getPoints(self):
+        self.__s.send("CLS\n".encode())
         self.__s.send("SENSe:SWEep:POINts?\n".encode())
         points = self.__s.recv(1024)
-        points = self.receiveFloat(points)
-        for i in range(int(points/130)):
+        return self.receiveFloat(points)
+
+    def getVoltageArray(self, points):
+        array = []
+        for i in range(int((points/130))):
             self.__s.send(("FETC:ARR:VOLT? " + str(i*130) +"\n").encode())
             value = self.__s.recv(1024)
             value = self.receiveArray(value)
             array = array + value
         return array
+        
         
     #Fetch the average power of all channels
     def getPower(self):
