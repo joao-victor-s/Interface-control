@@ -16,5 +16,9 @@ class GraphConsumer(AsyncWebsocketConsumer):
         await  self.accept()
         
         for i in range(1000):
-            await self.send(json.dumps({'value': randint(0,40)}))
-            await sleep(1)
+            array = nhr10[0].getVoltageArray()
+            print(len(array)/10)
+            for j in range(int(len(array)/4)):
+                await self.send(json.dumps({'value': array[j*4]}))
+                await sleep(0.1)
+

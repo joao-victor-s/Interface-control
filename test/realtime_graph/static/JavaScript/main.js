@@ -1,35 +1,70 @@
+var data_array = []
+var label_array = []
 
-var dps = Array(130)
+var graph_data = {
+    type: 'line',
+    data: { 
+            labels: Array.from(Array(100).keys()),
+            datasets: [{
+            label: 'Prototype',
+            data: data_array,
+            tension: 0.4,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderWidth: 5
+        }]
+    },
+  
 
-var myChart = new CanvasJS.Chart("chartContainer",{
-  title: {
-    text: "Live Data"
-  },
-  axisY: {
-    gridThickness: 0
-  },
-  data: [{
-    type: "spline",
-    dataPoints: dps
-  }]
-});
-myChart.render();
+}
+const config = {
+
+    type: 'line',
+    data: graph_data,
+    bezierCurve: true,
+    tension: 0.5,
+    options: {
+      animations: {
+        tension: {
+          duration: 1000,
+          easing: 'easeInSine',
+          loop: true
+        }
+      },
+      scales: {
+        y: { // defining min and max so hiding the dataset does not change scale range
+          min: 0,
+          max: 100
+        },
+        x: {
+          type: 'time',
+          ticks: {
+              autoSkip: true,
+              maxTicksLimit: 100
+          }
+          }
+      }
+    }
+  };
+
+  const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, graph_data, config);
 
 
-var socket = new WebSocket('ws://localhost:7000/ws/graph/');
-var updateInterval = 500;
+
+var socket = new WebSocket('ws://localhost:7000/ws/graph/')
 
 socket.onmessage = function(e){
     var djangoData = JSON.parse(e.data);
-    console.log(djangoData.value);
-    var updatedDps = [];
-    myChart.options.data[0].dataPoints = [];
+    
+     var newGraphData = graph_data.data.datasets[0].data;
+     if (newGraphData.length > 99){
+        newGraphData.shift();
+     }
+       
+     newGraphData.push(djangoData.value);
+     console.log(newGraphData);
 
-    for(var i = 0; i < dps.length; i++)
-      updatedDps.push(djangoData.value[i]);
-      console.log(djangoData.value[i]);
+     graph_data.data.datasets[0].data = newGraphData;
+     myChart.update();
 
-    myChart.options.data[0].dataPoints = updatedDps;
-    myChart.render();
-};
-setInterval(function(e){socket.onmessage()}, updateInterval);
+}

@@ -16,7 +16,7 @@ def main():
     nhr10 = []
     nhr30 = []
     nhr10 = interface.getNhr9410()
-    nhr30 = interface.getNhr9430()
+    #nhr30 = interface.getNhr9430()
 
 
     for elem in nhr10:
