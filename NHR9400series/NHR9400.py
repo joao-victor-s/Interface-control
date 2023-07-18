@@ -118,7 +118,8 @@ class NHR9400():
 
     def identify(self):
         self.__s.send("*IDN?\n".encode())
-        return self.receive()
+        value = self.__s.recv(1024)
+        return self.receiveString(value)
     #Function to see if exist any error in the carry
     def checkErrors(self):
         self.__s.send("SYST:ERR?\n".encode())
@@ -507,7 +508,10 @@ class NHR9400():
         points = self.receiveFloat(points)
         for i in range(int(points/130)):
             self.__s.send(("FETC:ARR:VOLT? " + str(i*130) +"\n").encode())
-            value = self.__s.recv(1024)
+            p_value = [self.__s.recv(1024)]
+            while(len(p_value[-1]) == 1024):
+                p_value.append(self.__s.recv(1024))
+            value = b"".join(p_value)
             value = self.receiveArray(value)
             array = array + value
         return array
