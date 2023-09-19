@@ -99,19 +99,12 @@ def on_disconnect(client, userdata, rc):
 def on_message(client, userdata, message):
     print(f'Received `{message.payload.decode()}` from `{message.topic}` topic')
     prefix, selector, fn = message.topic.split('/')
-    # message = json.loads(message.payload.decode())
-    
-    # selector = message['selector']
-    # fn = message['fn']
-    # args = message.get('args', [])
     args = [message.payload.decode()]
     if args[0] == '.':
         del args[0]
     else:
         args[0] = float(args[0])
 
-    # print(message['selector'])
-    # nhr = NHRs[selector]
     nhr = NHRs.get(selector, False)
     if not nhr:
         return client.publish(TOPIC_PUB, json.dumps("NHR not found"))
