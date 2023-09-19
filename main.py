@@ -14,6 +14,7 @@ host = 'localhost'
 port = 8086         
 dbname = 'telegraf'
 
+client_influxdb = InfluxDBClient(host, port, database=dbname)
 
 BROKER = 'broker.hivemq.com' 
 PORT = 1883
@@ -56,8 +57,6 @@ def on_connect(client, userdata, flags, rc):
         print(f'Failed to connect, return code {rc}')
 
 def write_influxdb(method_name, args, result):
-    client = InfluxDBClient(host, port, database=dbname)
-
     data = [
         {
             "measurement": "method_call",
@@ -71,6 +70,7 @@ def write_influxdb(method_name, args, result):
             }
         }
     ]
+    client_influxdb.write_points(data)
 
 
 
@@ -99,12 +99,19 @@ def on_disconnect(client, userdata, rc):
 def on_message(client, userdata, message):
     print(f'Received `{message.payload.decode()}` from `{message.topic}` topic')
     prefix, selector, fn = message.topic.split('/')
+    # message = json.loads(message.payload.decode())
+    
+    # selector = message['selector']
+    # fn = message['fn']
+    # args = message.get('args', [])
     args = [message.payload.decode()]
     if args[0] == '.':
         del args[0]
     else:
         args[0] = float(args[0])
 
+    # print(message['selector'])
+    # nhr = NHRs[selector]
     nhr = NHRs.get(selector, False)
     if not nhr:
         return client.publish(TOPIC_PUB, json.dumps("NHR not found"))
@@ -148,7 +155,6 @@ def publish(client):
         msg_count += 1
         time.sleep(1)
 
-
 def run():
     logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s',
                         level=logging.DEBUG)
@@ -160,6 +166,14 @@ def run():
     else:
         client.loop_stop()
 
+def signal_handler(sig, frame):
+    print('You pressed Ctrl+C!')
+    client_influxdb.close()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+print('Press Ctrl+C')
+# signal.pause()
 
 if __name__ == '__main__':
     run()
