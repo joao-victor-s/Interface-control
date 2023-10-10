@@ -1,0 +1,636 @@
+{
+  "__inputs": [],
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "geeksrus-mqtt-panel",
+      "name": "MQTT panel",
+      "version": "1.0.7"
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "7.5.3"
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "LabREI dashboard test",
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "mode": "Button",
+      "model": {
+        "maxValue": 100,
+        "minValue": 0,
+        "offValue": "false",
+        "onValue": "true",
+        "step": 1,
+        "text": "Enable"
+      },
+      "mqttAuth": "None",
+      "mqttPassword": "",
+      "mqttProtocol": "wss",
+      "mqttServer": "broker.hivemq.com",
+      "mqttServerPort": "8884/mqtt",
+      "mqttTopicPublish": "labrei-nhr-sub/9410/enableOutput",
+      "mqttTopicQuery": "",
+      "mqttTopicSubscribe": "labrei-nhr-pub",
+      "mqttUser": "",
+      "pluginVersion": "7.5.3",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "NHR Enable",
+      "type": "geeksrus-mqtt-panel",
+      "value": "1",
+      "viewModel": {
+        "maxValue": "100",
+        "minValue": "0",
+        "step": "1",
+        "text": "Enable"
+      }
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 3,
+        "y": 0
+      },
+      "id": 8,
+      "mode": "Button",
+      "model": {
+        "maxValue": 100,
+        "minValue": 0,
+        "offValue": "false",
+        "onValue": "true",
+        "step": 1,
+        "text": "Disable"
+      },
+      "mqttAuth": "None",
+      "mqttPassword": "",
+      "mqttProtocol": "wss",
+      "mqttServer": "broker.hivemq.com",
+      "mqttServerPort": "8884/mqtt",
+      "mqttTopicPublish": "labrei-nhr-sub/9410/enableOutput",
+      "mqttTopicQuery": "",
+      "mqttTopicSubscribe": "labrei-nhr-pub",
+      "mqttUser": "",
+      "pluginVersion": "7.5.3",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "NHR Disable",
+      "type": "geeksrus-mqtt-panel",
+      "value": "0",
+      "viewModel": {
+        "maxValue": "100",
+        "minValue": "0",
+        "step": "1",
+        "text": "Disable"
+      }
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 7,
+        "x": 6,
+        "y": 0
+      },
+      "id": 9,
+      "mode": "Text",
+      "model": {
+        "maxValue": 100,
+        "minValue": 0,
+        "offValue": "false",
+        "onValue": "true",
+        "step": 1,
+        "text": "Send"
+      },
+      "mqttAuth": "None",
+      "mqttPassword": "",
+      "mqttProtocol": "wss",
+      "mqttServer": "broker.hivemq.com",
+      "mqttServerPort": "8884/mqtt",
+      "mqttTopicPublish": "labrei-nhr-sub/9410/setVoltage",
+      "mqttTopicQuery": "",
+      "mqttTopicSubscribe": "labrei-nhr-pub",
+      "mqttUser": "",
+      "pluginVersion": "7.5.3",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "NHR Set Voltage",
+      "type": "geeksrus-mqtt-panel",
+      "value": {
+        "type": "Buffer",
+        "data": [
+          50,
+          52,
+          48,
+          46,
+          48
+        ]
+      },
+      "viewModel": {
+        "maxValue": "100",
+        "minValue": "0",
+        "step": "1",
+        "text": "Send"
+      }
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 7,
+        "x": 13,
+        "y": 0
+      },
+      "id": 10,
+      "mode": "Text",
+      "model": {
+        "maxValue": 100,
+        "minValue": 0,
+        "offValue": "false",
+        "onValue": "true",
+        "step": 1,
+        "text": "Send"
+      },
+      "mqttAuth": "None",
+      "mqttPassword": "",
+      "mqttProtocol": "wss",
+      "mqttServer": "broker.hivemq.com",
+      "mqttServerPort": "8884/mqtt",
+      "mqttTopicPublish": "labrei-nhr-sub/9410/setFreq",
+      "mqttTopicQuery": "",
+      "mqttTopicSubscribe": "labrei-nhr-pub",
+      "mqttUser": "",
+      "pluginVersion": "7.5.3",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "NHR Set Frequency",
+      "type": "geeksrus-mqtt-panel",
+      "value": {
+        "type": "Buffer",
+        "data": [
+          50,
+          52,
+          48,
+          46,
+          48
+        ]
+      },
+      "viewModel": {
+        "maxValue": "100",
+        "minValue": "0",
+        "step": "1",
+        "text": "Send"
+      }
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 3
+      },
+      "id": 12,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "7.5.3",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "method",
+              "operator": "=",
+              "value": "Voltage"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Voltage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "rothz"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 3
+      },
+      "id": 13,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "7.5.3",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "nhr",
+              "operator": "=",
+              "value": "9410"
+            },
+            {
+              "condition": "AND",
+              "key": "method",
+              "operator": "=",
+              "value": "Freq"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Frequency ",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "LabREI",
+  "uid": "-SKl6PX4k",
+  "version": 2
+}

@@ -12,11 +12,11 @@ import sys
 
 host = 'localhost'  
 port = 8086         
-dbname = 'telegraf'
+dbname = 'influx'
 
 client_influxdb = InfluxDBClient(host, port, database=dbname)
 
-BROKER = 'broker.hivemq.com' 
+BROKER = "broker.hivemq.com" 
 PORT = 1883
 TOPIC_SUB = "labrei-nhr-sub/#"
 TOPIC_PUB = "labrei-nhr-pub"
@@ -41,14 +41,6 @@ NHRs = {
     #  "9430" : interface.getNhr9430()[0], 
 }
 
-def signal_handler(sig, frame):
-    print('You pressed Ctrl+C!')
-    sys.exit(0)
-
-signal.signal(signal.SIGINT, signal_handler)
-print('Press Ctrl+C')
-signal.pause()
-
 def on_connect(client, userdata, flags, rc):
     if rc == 0 and client.is_connected():
         print("Connected to MQTT Broker!")
@@ -56,17 +48,17 @@ def on_connect(client, userdata, flags, rc):
     else:
         print(f'Failed to connect, return code {rc}')
 
-def write_influxdb(method_name, args, result):
+def write_influxdb(method_name, args):
     data = [
         {
-            "measurement": "method_call",
+            "measurement": "mqtt_consumer",
             "tags": {
                 "method": method_name
             },
             "time": datetime.datetime.utcnow().isoformat(),
             "fields": {
-                "arguments": str(args),
-                "result": str(result)
+                "value": str(args),
+                # "result": str(result)
             }
         }
     ]
@@ -121,7 +113,8 @@ def on_message(client, userdata, message):
     
     result = getattr(nhr, fn)(*args)
 
-    write_influxdb(fn, args, result)
+    # write_influxdb(fn, args, result)
+    write_influxdb(fn, args)
 
     client.publish(TOPIC_PUB, json.dumps(result))
 
@@ -135,32 +128,45 @@ def connect_mqtt():
 
 
 def publish(client):
-    msg_count = 0
     while not FLAG_EXIT:
-        msg_dict = {
-            'msg': msg_count
-        }
-        msg = json.dumps(msg_dict)
-        if not client.is_connected():
-            logging.error("publish: MQTT client is not connected!")
-            time.sleep(1)
-            continue
-        result = client.publish(TOPIC_PUB, msg)
-        # result: [0, 1]
-        status = result[0]
-        if status == 0:
-            print(f'Send `{msg}` to topic `{TOPIC_SUB}`')
-        else:
-            print(f'Failed to send message to topic {TOPIC_SUB}')
-        msg_count += 1
-        time.sleep(1)
+        for nhr_id, nhr_instance in NHRs.items():
+            voltage = nhr_instance.getVoltage() 
+            freq = nhr_instance.getFreq() 
+            data = [
+                {
+                    "measurement": "mqtt_consumer",
+                    "tags": {
+                        "nhr": nhr_id,
+                        "method": "Voltage"
+                    },
+                    "time": datetime.datetime.utcnow().isoformat(),
+                    "fields": {
+                        "value": str(voltage)
+                    }
+                }, 
+                {
+                    "measurement": "mqtt_consumer",
+                    "tags": {
+                        "nhr": nhr_id,
+                        "method": "Freq"
+                    },
+                    "time": datetime.datetime.utcnow().isoformat(),
+                    "fields": {
+                        "value": str(freq)
+                    }
+                }
+            ]
+            client_influxdb.write_points(data)
+        time.sleep(1) 
+
+
 
 def run():
     logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s',
                         level=logging.DEBUG)
     client = connect_mqtt()
     client.loop_start()
-    time.sleep(1000)
+    time.sleep(2)
     if client.is_connected():
         publish(client)
     else:
@@ -172,7 +178,7 @@ def signal_handler(sig, frame):
     sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
-print('Press Ctrl+C')
+print('Press Ctrl+C to exit')
 # signal.pause()
 
 if __name__ == '__main__':

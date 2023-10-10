@@ -479,12 +479,12 @@ class NHR9400():
         self.__s.send(("SOUR:FREQ " + str(freq) + "\n").encode())
     #!!!! Doesnt work!!!!
     def getFreq(self):
-        self.__s.send("FETC:FREQ\n".encode())
+        self.__s.send("INST:NSEL 1;FREQ?\n".encode())
         value = self.__s.recv(1024)
         return self.receiveFloat(value)
     #Fetch the average voltage of all channels
     def getVoltage(self):
-        self.__s.send("FETC:VOLT?\n".encode())
+        self.__s.send("INST:NSEL 1;VOLT?\n".encode())
         value = self.__s.recv(1024)
         return self.receiveFloat(value)
     #fetch individual value of voltage of one channel
@@ -519,7 +519,7 @@ class NHR9400():
         
     #Fetch the average power of all channels
     def getPower(self):
-        self.__s.send("FETC:POW?\n".encode())
+        self.__s.send("INST:NSEL 1;POW?\n".encode())
         value = self.__s.recv(1024)
         return self.receiveFloat(value)
     #fetch individual value of Power of one channel
@@ -539,7 +539,7 @@ class NHR9400():
 
         #Fetch the average current of all channels
     def getCurrent(self):
-        self.__s.send("FETC:CURR?\n".encode())
+        self.__s.send("INST:NSEL 1;CURR?\n".encode())
         value = self.__s.recv(1024)
         return self.receiveFloat(value)
     #fetch individual value of current of one channel
