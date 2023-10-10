@@ -88,9 +88,14 @@ def on_disconnect(client, userdata, rc):
     FLAG_EXIT = True
 
 
-def on_message(client, userdata, message):
+def on_message_set(client, userdata, message):
     print(f'Received `{message.payload.decode()}` from `{message.topic}` topic')
-    prefix, selector, fn = message.topic.split('/')
+    splitted = message.topic.split('/')
+    if len(splitted) != 3:
+        print(f"not enough values o unpack. expected 3, got {len(splitted)}")
+        return
+    prefix, selector, fn = splitted
+    
     # message = json.loads(message.payload.decode())
     
     # selector = message['selector']
@@ -121,7 +126,7 @@ def on_message(client, userdata, message):
 def connect_mqtt():
     client = mqtt_client.Client(CLIENT_ID)
     client.on_connect = on_connect
-    client.on_message = on_message
+    client.on_message = on_message_set
     client.connect(BROKER, PORT, keepalive=3)
     client.on_disconnect = on_disconnect
     return client
