@@ -10,7 +10,7 @@ import signal
 import sys
 
 
-host = 'localhost'  
+host = '192.168.0.113'  
 port = 8086         
 dbname = 'telegraf'
 
@@ -40,14 +40,6 @@ NHRs = {
      "9410" : interface.getNhr9410()[0],
     #  "9430" : interface.getNhr9430()[0], 
 }
-
-def signal_handler(sig, frame):
-    print('You pressed Ctrl+C!')
-    sys.exit(0)
-
-signal.signal(signal.SIGINT, signal_handler)
-print('Press Ctrl+C')
-signal.pause()
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0 and client.is_connected():
@@ -96,9 +88,14 @@ def on_disconnect(client, userdata, rc):
     FLAG_EXIT = True
 
 
-def on_message(client, userdata, message):
+def on_message_set(client, userdata, message):
     print(f'Received `{message.payload.decode()}` from `{message.topic}` topic')
-    prefix, selector, fn = message.topic.split('/')
+    splitted = message.topic.split('/')
+    if len(splitted) != 3:
+        print(f"not enough values o unpack. expected 3, got {len(splitted)}")
+        return
+    prefix, selector, fn = splitted
+    
     # message = json.loads(message.payload.decode())
     
     # selector = message['selector']
@@ -128,31 +125,22 @@ def on_message(client, userdata, message):
 def connect_mqtt():
     client = mqtt_client.Client(CLIENT_ID)
     client.on_connect = on_connect
-    client.on_message = on_message
+    client.on_message = on_message_set
     client.connect(BROKER, PORT, keepalive=3)
     client.on_disconnect = on_disconnect
     return client
 
 
-def publish(client):
-    msg_count = 0
+def on_message_get():
     while not FLAG_EXIT:
-        msg_dict = {
-            'msg': msg_count
+        nhr = NHRs.get("9410", False)
+        values = {
+            'NHR' : nhr, 
+            'voltage': nhr.getVoltage(),
         }
-        msg = json.dumps(msg_dict)
-        if not client.is_connected():
-            logging.error("publish: MQTT client is not connected!")
-            time.sleep(1)
-            continue
-        result = client.publish(TOPIC_PUB, msg)
-        # result: [0, 1]
-        status = result[0]
-        if status == 0:
-            print(f'Send `{msg}` to topic `{TOPIC_SUB}`')
-        else:
-            print(f'Failed to send message to topic {TOPIC_SUB}')
-        msg_count += 1
+        # values = json.dumps(values)
+      
+        write_influxdb('voltage', )
         time.sleep(1)
 
 def run():
@@ -161,8 +149,12 @@ def run():
     client = connect_mqtt()
     client.loop_start()
     time.sleep(1000)
+
+    print(NHRs.getVoltage())
+
     if client.is_connected():
-        publish(client)
+        # on_message_get()
+        print("connect")
     else:
         client.loop_stop()
 
