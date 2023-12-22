@@ -537,10 +537,21 @@ class NHR9400():
         value = self.__s.recv(1024)
         return self.receiveFloat(value)
 
+    def testFunction(self):
+        self.__s.send("INST:NSEL 1; SENS:SWE:APER 1; INIT".encode())
+        # self.__s.send("FECT:CURR;\n".encode())
+        # value = self.__s.recv(1024)
+        # return self.receiveFloat(value)
+    
+    def testFunction(self):
+        self.__s.send("INST:NSEL 1; SENS:SWE:APER 1; INIT".encode())
+
         #Fetch the average current of all channels
     def getCurrent(self):
-        self.__s.send("INST:NSEL 1;CURR?\n".encode())
+        self.__s.send("FECT:CURR?\n".encode())
         value = self.__s.recv(1024)
+        print(value.decode())
+        print(value)
         return self.receiveFloat(value)
     #fetch individual value of current of one channel
     def getCurrentA(self):

@@ -1,25 +1,4 @@
 {
-  "__inputs": [],
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "geeksrus-mqtt-panel",
-      "name": "MQTT panel",
-      "version": "1.0.7"
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "7.5.3"
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -37,7 +16,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": null,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -276,14 +255,13 @@
       "title": "NHR Set Voltage",
       "type": "geeksrus-mqtt-panel",
       "value": {
-        "type": "Buffer",
         "data": [
-          50,
-          52,
-          48,
-          46,
-          48
-        ]
+          110,
+          117,
+          108,
+          108
+        ],
+        "type": "Buffer"
       },
       "viewModel": {
         "maxValue": "100",
@@ -366,14 +344,13 @@
       "title": "NHR Set Frequency",
       "type": "geeksrus-mqtt-panel",
       "value": {
-        "type": "Buffer",
         "data": [
-          50,
-          52,
-          48,
-          46,
-          48
-        ]
+          110,
+          117,
+          108,
+          108
+        ],
+        "type": "Buffer"
       },
       "viewModel": {
         "maxValue": "100",
@@ -632,5 +609,5 @@
   "timezone": "",
   "title": "LabREI",
   "uid": "-SKl6PX4k",
-  "version": 2
+  "version": 4
 }
