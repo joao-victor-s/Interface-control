@@ -24,3 +24,26 @@ sudo ic-labrei/bin/python3 main.py
 
 Lembre-se de ter permissões de superusuário ("sudo") para execução, caso necessário.
 
+## Configuração do HiveMQ (MQTT):
+
+Para utilizar a comunicação via MQTT é necessário utilizar um Broker, como o HiveMQ, assim recomendo utilziar o MQTT Explore, um cliente MQTT que dá acesso a conectividade. 
+
+![Alt text](image.png)
+
+
+## Configuração do Grafana:
+
+Acesse no navegador de sua preferência e digite a URL abaixo para acessar o container do Grafana:
+
+```bash
+http://localhost:3001/login
+```
+
+- username: admin
+- Password: admin
+
+Vá até a aba Dashboards e realize o *Import* do dashboard do LabREI e acesse.
+
+
+
+
