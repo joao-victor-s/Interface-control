@@ -75,6 +75,8 @@ http://localhost:3001/login
 
 Vá até a aba Dashboards e realize o *Import* do dashboard do LabREI e acesse.
 
+No final será mostrado uma tela como essa, no qual é possível enviar e receber parâmetros.
+
 
 
 
