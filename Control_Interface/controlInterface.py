@@ -6,7 +6,7 @@ from UtilitiesRei.IPFinder import IPFinder
 class controlInterface:
     
     def __init__(self):
-        self.__listIp = ['192.168.0.150']
+        self.__listIp = ['192.168.0.150', '192.168.0.151']
         self.__listUsedIp = []
         self.__nhr9410 = []
         self.__nhr9430 = []

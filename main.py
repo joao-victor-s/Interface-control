@@ -38,7 +38,7 @@ interface.newNhr("9430")
 
 NHRs = {  
      "9410" : interface.getNhr9410()[0],
-    #  "9430" : interface.getNhr9430()[0], 
+     "9430" : interface.getNhr9430()[0], 
 }
 
 def on_connect(client, userdata, flags, rc):
@@ -134,14 +134,14 @@ def connect_mqtt():
 
 def publish(client):
     while not FLAG_EXIT:
-        for nhr_id, nhr_instance in NHRs.items():
-            voltage = nhr_instance.getVoltage() 
-            freq = nhr_instance.getFreq() 
-            data = [
+        voltage = NHRs["9410"].getVoltage() 
+        freq = NHRs["9410"].getFreq() 
+        curr = NHRs["9430"].getCurrent()
+        data = [
                 {
                     "measurement": "mqtt_consumer",
                     "tags": {
-                        "nhr": nhr_id,
+                        "nhr": "9410",
                         "method": "Voltage"
                     },
                     "time": datetime.datetime.utcnow().isoformat(),
@@ -152,17 +152,28 @@ def publish(client):
                 {
                     "measurement": "mqtt_consumer",
                     "tags": {
-                        "nhr": nhr_id,
+                        "nhr": "9410",
                         "method": "Freq"
                     },
                     "time": datetime.datetime.utcnow().isoformat(),
                     "fields": {
                         "value": str(freq)
                     }
+                },
+                {
+                    "measurement": "mqtt_consumer",
+                    "tags": {
+                        "nhr": "9430",
+                        "method": "Curr"
+                    },
+                    "time": datetime.datetime.utcnow().isoformat(),
+                    "fields": {
+                        "value": str(curr)
+                    }
                 }
-            ]
-            client_influxdb.write_points(data)
-        time.sleep(1) 
+        ]
+        client_influxdb.write_points(data)
+    time.sleep(1) 
 
 
 
