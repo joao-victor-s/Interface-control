@@ -77,7 +77,7 @@ Vá até a aba Dashboards e realize o *Import* do dashboard do LabREI e acesse.
 
 No final será mostrado uma tela como essa, no qual é possível enviar e receber parâmetros.
 
-![Alt text](image-1.png)
+![Alt text](image-2.png)
 
 
 
