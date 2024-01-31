@@ -25,13 +25,15 @@ sudo ic-labrei/bin/python3 main.py
 ```
 
 Lembre-se de ter permissões de superusuário ("sudo") para execução, caso necessário.
+
 *Nota*: Pode ser necessário rodar o docker-compose.yml antes da main.py. 
 
 # Containers e MQTT
 
 ## Inicie os containers Docker
 
-É importante iniciar os containers docker por meio do docker-compose.yml. Será necessário instalar o docker e docker compose em sua máquina.
+É importante iniciar os containers docker por meio do docker-compose.yml. 
+Será necessário instalar o docker e docker compose em sua máquina.
 
 ```bash
 docker-compose up
