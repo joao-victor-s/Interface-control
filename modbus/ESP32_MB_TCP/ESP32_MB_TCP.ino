@@ -1,8 +1,6 @@
-
 #include <Arduino.h>
 #include <WiFi.h>
 #include <ModbusClientTCP.h>  // Inclui a biblioteca ModbusClient TCP
-
 
 char ssid[] = "JOAO";     
 char pass[] = "12345678";     
@@ -10,7 +8,10 @@ char pass[] = "12345678";
 WiFiClient theClient;          // Configura/monta um Cliente
 ModbusClientTCP MbTcp(theClient); // Cria uma instância ModbusTCP 
 
-unsigned long tmrpt;  // Variavel para calculo do tempo de resposta.
+unsigned long tmrpt;  // Variável para cálculo do tempo de resposta
+const int threshold = 20;
+const int LED_BUILTIN = 2;
+int touchValue; 
 
 /*-------------------------------------------------------------- 
      Função para manipular as respostas recebidas     
@@ -35,8 +36,6 @@ void handleError(Error error, uint32_t token)
    ModbusError me(error); // ModbusError retorna uma mensagem de erro, baseado no código de erro
    Serial.printf("Erro: %02X - %s\n", (int)me, (const char *)me);
 }
-
-
 
 /*-------------------------------------------------------------- 
      Setup inicial  
@@ -64,23 +63,33 @@ void setup(void)
    MbTcp.begin();                      // Inicia a tarefa em segundo plano, do ModbusTCP
 
    MbTcp.setTarget(IPAddress(192, 168, 0, 102), 5020);   // Define o IP do servidor Modbus TCP e a porta
-}
 
+   // Configura a porta para o LED
+   pinMode(LED_BUILTIN, OUTPUT);
+}
 
 /*-------------------------------------------------------------- 
      Loop principal
 ---------------------------------------------------------------*/
 void loop() 
 {
-   // A formatação para seguisição é a seguinte:    
-   // - Token: para verificar se a resposta confere com a solicitação. Usamos o valor atual de millis() para isso.
-   // - Server ID = 1
-   // - Código de função = 0x03 (ler resgistradores do tipo Holding)
-   // - Endereço inicial de leitura = 3207
-   // - Numero de registradores a serem lidos = 1
+   // Leitura do valor de toque
+   touchValue = touchRead(T0);
+   Serial.print(touchValue);
+   
+   if(touchValue < threshold) {
+      digitalWrite(LED_BUILTIN, HIGH);
+      Serial.print(" Led ON\n");
+   } else {
+      digitalWrite(LED_BUILTIN, LOW);
+      Serial.print(" Led OFF\n");
+   }
+
+   // Envia o valor do touch para o servidor Modbus
+   uint16_t modbusValue = (uint16_t)touchValue; // Conversão do valor lido para o tipo uint16_t
    
    tmrpt = millis();
-   Error err = MbTcp.addRequest((uint32_t)millis(), 1, READ_HOLD_REGISTER, 3207, 1);
+   Error err = MbTcp.addRequest((uint32_t)millis(), 1, READ_HOLD_REGISTER, 3207, modbusValue);
    
    if (err!=SUCCESS) // Caso algo de errado na chamada da função, um código de erro será enviado pela serial e a requisição não será feita
    {
@@ -88,5 +97,5 @@ void loop()
       Serial.printf("Error creating request: %02X - %s\n", (int)e, (const char *)e);
    }
 
-    delay(3000); // delay entre requisições
+   delay(3000); // delay entre requisições
 }
