@@ -7,18 +7,19 @@ networks:
     driver: bridge
 
 services:
-  telegraf:
-    image: telegraf
-    container_name: telegraf
-    restart: always
-    volumes:
-    - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
-    depends_on:
-      - influxdb
-    networks:
-      - srv0
-    ports:
-    - '8125:8125'
+  # telegraf:
+  #   image: telegraf
+  #   container_name: telegraf
+  #   restart: always
+  #   volumes:
+  #   - ./config/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+  #   depends_on:
+  #     - influxdb
+  #   # networks:
+  #   #   - srv0
+  #   network_mode: "host"
+  #   ports:
+  #   - '8125:8125'
 
   influxdb:
     image: influxdb:1.8-alpine
@@ -54,7 +55,30 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
 
-      
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    ports:
+      - "1883:1883" #default mqtt port
+      - "9001:9001" #default mqtt port for websockets
+    volumes:
+      - ./config:/mosquitto/config:rw
+      - ./data:/mosquitto/data:rw
+      - ./log:/mosquitto/log:rw
+    restart: unless-stopped
+    networks:
+        - srv0
+
+  neuron:
+    image: emqx/neuron:2.5.3-alpine
+    container_name: neuron-alpine
+    networks:
+        - srv0
+    ports:
+      - "7001:7000"
+    privileged: true
+    restart: always
+
 volumes:
   grafana_data: {}
   influxdb_data: {}
