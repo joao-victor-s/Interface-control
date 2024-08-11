@@ -7,20 +7,6 @@ networks:
     driver: bridge
 
 services:
-  # telegraf:
-  #   image: telegraf
-  #   container_name: telegraf
-  #   restart: always
-  #   volumes:
-  #   - ./config/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-  #   depends_on:
-  #     - influxdb
-  #   # networks:
-  #   #   - srv0
-  #   network_mode: "host"
-  #   ports:
-  #   - '8125:8125'
-
   influxdb:
     image: influxdb:1.8-alpine
     container_name: influxdb
