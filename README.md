@@ -1,7 +1,3 @@
-Here's the translated text in English:
-
----
-
 # Main
 
 ## Activating the Virtual Environment:
