@@ -1,73 +1,75 @@
+Here's the translated text in English:
+
+---
+
 # Main
 
-## Ativação do Ambiente Virtual:
+## Activating the Virtual Environment:
 
-Antes de executar o código, ative o ambiente virtual usando o seguinte comando:
+Before running the code, activate the virtual environment using the following command:
 
 ```bash
 source ic-labrei/bin/activate
 ```
 
-## Instalação de Requisitos:
+## Installing Requirements:
 
-Certifique-se de que todas as bibliotecas necessárias estão instaladas executando o seguinte comando:
+Make sure all necessary libraries are installed by running the following command:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Execução do Código:
+## Running the Code:
 
-Para rodar o código, utilize o seguinte comando:
+To run the code, use the following command:
 
 ```bash
 sudo ic-labrei/bin/python3 main.py
 ```
 
-Lembre-se de ter permissões de superusuário ("sudo") para execução, caso necessário.
+Remember to have superuser ("sudo") permissions for execution if necessary.
 
-*Nota*: Pode ser necessário rodar o docker-compose.yml antes da main.py. 
+*Note*: You might need to run the `docker-compose.yml` before `main.py`.
 
-# Containers e MQTT
+# Containers and MQTT
 
-## Inicie os containers Docker
+## Start Docker Containers
 
-É importante iniciar os containers docker por meio do docker-compose.yml. 
-Será necessário instalar o docker e docker compose em sua máquina.
+It is important to start the Docker containers using `docker-compose.yml`. You will need to have Docker and Docker Compose installed on your machine.
 
 ```bash
 docker-compose up
 ```
 
-*Nota*: Esse comando travará o terminal com os logs dos containers, então abra outro.
+*Note*: This command will lock the terminal with the container logs, so open another terminal if needed.
 
-## Configuração do HiveMQ (MQTT):
+## Configuring HiveMQ (MQTT):
 
-Para utilizar a comunicação via MQTT é necessário utilizar um Broker, como o HiveMQ, assim recomendo utilizar o MQTT Explore, um cliente MQTT que dá acesso a conectividade. 
+To use MQTT communication, you need to use a broker like HiveMQ. I recommend using MQTT Explorer, an MQTT client that provides connectivity access.
 
 ![Alt text](image.png)
 
-*Nota*: É possível analisar as mensagens armazenadas no banco de dados InfluxDb, por meio dos seguintes comandos:
+*Note*: You can analyze the messages stored in the InfluxDB database using the following commands:
 
 ```bash
 docker exec -it influxdb sh
-``````
+```
 ```bash
 influx
-``````
+```
 ```bash
 use influx
-``````
+```
 ```bash
 select * from mqtt_consumer
-``````
+```
 
-Será aberto um conjunto de dados que estão sendo armazenados no InfluxDb. 
+A dataset of stored information from InfluxDB will be displayed.
 
+## Configuring Grafana:
 
-## Configuração do Grafana:
-
-Acesse no navegador de sua preferência e digite a URL abaixo para acessar o container do Grafana:
+Open your preferred browser and enter the URL below to access the Grafana container:
 
 ```bash
 http://localhost:3001/login
@@ -76,11 +78,10 @@ http://localhost:3001/login
 - username: admin
 - Password: admin
 
-Vá até a aba Dashboards e realize o *Import* do dashboard do LabREI e acesse.
+Go to the Dashboards tab and import the LabREI dashboard.
 
-No final será mostrado uma tela como essa, no qual é possível enviar e receber parâmetros.
+At the end, a screen will appear where you can send and receive parameters.
 
 ![Alt text](image-2.png)
 
-
-
+---
